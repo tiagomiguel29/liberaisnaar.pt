@@ -1,7 +1,8 @@
-import DeployButton from "@/components/deploy-button";
 import { EnvVarWarning } from "@/components/env-var-warning";
 import HeaderAuth from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
@@ -14,9 +15,15 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Liberais na AR",
+  description: "Acompanha a atividade dos deputados liberais na Assembleia da República",
 };
+
+const navItems = [
+  { name: "Home", href: "/" },
+  { name: "Iniciativas", href: "/iniciativas" },
+  { name: "Deputados", href: "/deputados" },
+];
 
 export default function RootLayout({
   children,
@@ -33,40 +40,109 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <main className="min-h-screen flex flex-col items-center">
-            <div className="flex-1 w-full flex flex-col gap-20 items-center">
-              <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-                <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-                  <div className="flex gap-5 items-center font-semibold">
-                    <Link href={"/"}>Next.js Supabase Starter</Link>
-                    <div className="flex items-center gap-2">
-                      <DeployButton />
-                    </div>
-                  </div>
+        
+              <header className="bg-[#00558f] w-full text-white py-4 px-6 md:px-8 flex items-center justify-between">
+                
+                <Link
+                  href="/"
+                  className="flex items-center gap-2"
+                  prefetch={false}
+                >
+                
+                  <span className="text-lg font-semibold">Liberais na AR</span>
+                </Link>
+                <nav className="hidden md:flex items-center gap-6">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="text-sm font-medium hover:text-gray-300 transition-colors"
+                    prefetch={false}
+                  >
+                    {item.name}
+                  </Link>
+                ))  
+                }
                   {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
-                </div>
-              </nav>
-              <div className="flex flex-col gap-20 max-w-5xl p-5">
+                </nav>
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="icon" className="md:hidden">
+                      <MenuIcon className="h-6 w-6" />
+                      <span className="sr-only">Toggle navigation menu</span>
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left">
+                    <div className="grid gap-4 py-6">
+                      <Link
+                        href="/"
+                        className="flex items-center gap-2 text-lg font-semibold"
+                        prefetch={false}
+                      >
+                    
+                        <span>Liberais na AR</span>
+                      </Link>
+                      {navItems.map((item) => (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="text-lg font-medium hover:text-gray-300 transition-colors"
+                          prefetch={false}
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                      {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </header>
+              
+
+              <div className="w-full p-5 flex flex-col items-center">
                 {children}
               </div>
 
               <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
                 <p>
-                  Powered by{" "}
+                  Developed by{" "}
                   <a
-                    href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
+                    href="https://github.com/tiagomiguel29"
                     target="_blank"
                     className="font-bold hover:underline"
                     rel="noreferrer"
                   >
-                    Supabase
+                    Tiago Oliveira
                   </a>
                 </p>
                 <ThemeSwitcher />
               </footer>
-            </div>
+          
           </main>
         </ThemeProvider>
       </body>
     </html>
   );
 }
+
+function MenuIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="4" x2="20" y1="12" y2="12" />
+      <line x1="4" x2="20" y1="6" y2="6" />
+      <line x1="4" x2="20" y1="18" y2="18" />
+    </svg>
+  );
+}
+
