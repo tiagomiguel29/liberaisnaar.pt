@@ -97,15 +97,15 @@ export default function RootLayout({
                   </SheetContent>
                 </Sheet>
               </header>
-              
 
               <div className="w-full p-5 flex flex-col items-center">
                 {children}
               </div>
 
-              <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
+            <footer className="w-full flex flex-col items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
+              <div className="flex items-center justify-center gap-8">
                 <p>
-                  Developed by{" "}
+                Desenvolvido por{" "}
                   <a
                     href="https://github.com/tiagomiguel29"
                     target="_blank"
@@ -116,8 +116,11 @@ export default function RootLayout({
                   </a>
                 </p>
                 <ThemeSwitcher />
+              </div>
+              <div>
+                  Dados obtidos através do <a href="https://www.parlamento.pt/Cidadania/Paginas/DadosAbertos.aspx" target="_blank" className="font-bold hover:underline">Portal de Dados Abertos do Parlamento</a>
+              </div>
               </footer>
-          
           </main>
         </ThemeProvider>
       </body>
