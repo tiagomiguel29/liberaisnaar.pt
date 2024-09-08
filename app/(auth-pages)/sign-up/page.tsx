@@ -14,7 +14,7 @@ export default async function Signup({ searchParams }: { searchParams: Message }
   const { data: { user } } = await supabase.auth.getUser();
 
   if (user) {
-    return redirect("/protected");
+    return redirect("/account");
   }
 
   if ("message" in searchParams) {
