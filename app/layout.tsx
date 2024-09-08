@@ -16,7 +16,8 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "Liberais na AR",
-  description: "Acompanha a atividade dos deputados liberais na Assembleia da República",
+  description:
+    "Acompanha a atividade dos deputados liberais na Assembleia da República",
 };
 
 const navItems = [
@@ -40,18 +41,15 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <main className="min-h-screen flex flex-col items-center">
-        
-              <header className="bg-[#00558f] w-full text-white py-4 px-6 md:px-8 flex items-center justify-between">
-                
-                <Link
-                  href="/"
-                  className="flex items-center gap-2"
-                  prefetch={false}
-                >
-                
-                  <span className="text-lg font-semibold">Liberais na AR</span>
-                </Link>
-                <nav className="hidden md:flex items-center gap-6">
+            <header className="bg-primary w-full text-white py-4 px-6 md:px-8 flex items-center justify-between">
+              <Link
+                href="/"
+                className="flex items-center gap-2"
+                prefetch={false}
+              >
+                <span className="text-lg font-semibold">Liberais na AR</span>
+              </Link>
+              <nav className="hidden md:flex items-center gap-6">
                 {navItems.map((item) => (
                   <Link
                     key={item.name}
@@ -61,66 +59,64 @@ export default function RootLayout({
                   >
                     {item.name}
                   </Link>
-                ))  
-                }
-                  {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
-                </nav>
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="icon" className="md:hidden">
-                      <MenuIcon className="h-6 w-6" />
-                      <span className="sr-only">Toggle navigation menu</span>
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="left">
-                    <div className="grid gap-4 py-6">
+                ))}
+                {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+              </nav>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="md:hidden">
+                    <MenuIcon className="h-6 w-6" />
+                    <span className="sr-only">Toggle navigation menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left">
+                  <div className="grid gap-4 py-6">
+                    <Link
+                      href="/"
+                      className="flex items-center gap-2 text-lg font-semibold"
+                      prefetch={false}
+                    >
+                      <span>Liberais na AR</span>
+                    </Link>
+                    {navItems.map((item) => (
                       <Link
-                        href="/"
-                        className="flex items-center gap-2 text-lg font-semibold"
+                        key={item.name}
+                        href={item.href}
+                        className="text-lg font-medium hover:text-gray-300 transition-colors"
                         prefetch={false}
                       >
-                    
-                        <span>Liberais na AR</span>
+                        {item.name}
                       </Link>
-                      {navItems.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="text-lg font-medium hover:text-gray-300 transition-colors"
-                          prefetch={false}
-                        >
-                          {item.name}
-                        </Link>
-                      ))}
-                      {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
-                    </div>
-                  </SheetContent>
-                </Sheet>
-              </header>
+                    ))}
+                    {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </header>
 
-              <div className="w-full p-5 flex flex-col items-center">
-                {children}
-              </div>
+            <div className="w-full p-5 flex flex-col items-center">
+              {children}
+            </div>
 
             <footer className="w-full flex flex-col items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
               <div className="flex items-center justify-center gap-8">
-                <p>
+              <p>
                 Desenvolvido por{" "}
-                  <a
-                    href="https://github.com/tiagomiguel29"
-                    target="_blank"
-                    className="font-bold hover:underline"
-                    rel="noreferrer"
-                  >
-                    Tiago Oliveira
-                  </a>
-                </p>
-                <ThemeSwitcher />
+                <a
+                  href="https://github.com/tiagomiguel29"
+                  target="_blank"
+                  className="font-bold hover:underline"
+                  rel="noreferrer"
+                >
+                  Tiago Oliveira
+                </a>
+              </p>
+              <ThemeSwitcher />
               </div>
               <div>
                   Dados obtidos através do <a href="https://www.parlamento.pt/Cidadania/Paginas/DadosAbertos.aspx" target="_blank" className="font-bold hover:underline">Portal de Dados Abertos do Parlamento</a>
               </div>
-              </footer>
+            </footer>
           </main>
         </ThemeProvider>
       </body>
@@ -148,4 +144,3 @@ function MenuIcon(props: any) {
     </svg>
   );
 }
-
