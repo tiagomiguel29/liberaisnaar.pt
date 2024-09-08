@@ -1,7 +1,6 @@
 import { signOutAction } from "@/app/actions";
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import Link from "next/link";
-import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { createClient } from "@/utils/supabase/server";
 
@@ -11,65 +10,33 @@ export default async function AuthButton() {
   } = await createClient().auth.getUser();
 
   if (!hasEnvVars) {
-    return (
-      <>
-        <div className="flex gap-4 items-center">
-          <div>
-            <Badge
-              variant={"default"}
-              className="font-normal pointer-events-none"
-            >
-              Please update .env.local file with anon key and url
-            </Badge>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              asChild
-              size="sm"
-              variant={"outline"}
-              disabled
-              className="opacity-75 cursor-none pointer-events-none"
-            >
-              <Link href="/sign-in">Sign in</Link>
-            </Button>
-            <Button
-              asChild
-              size="sm"
-              variant={"default"}
-              disabled
-              className="opacity-75 cursor-none pointer-events-none"
-            >
-              <Link href="/sign-up">Sign up</Link>
-            </Button>
-          </div>
-        </div>
-      </>
-    );
+    throw new Error("Missing environment variables");
   }
+
   return user ? (
     <div className="flex items-center gap-4">
       <Button
               asChild
               size="sm"
-              variant={"default"}
+              variant={"secondary"}
             >
       <Link
                   href="/account"
-          
+                  className="flex items-center gap-x-2"
                 >
                   <UserIcon className="h-4 w-4" />
                   {user.user_metadata.name}
                 </Link>
                 </Button>
       <form action={signOutAction}>
-        <Button type="submit" variant={"outline"}>
+        <Button type="submit" size="sm" variant={"destructive"}>
           Sign out
         </Button>
       </form>
     </div>
   ) : (
     <div className="flex gap-2">
-      <Button asChild size="sm" className="w-full" variant={"outline"}>
+      <Button asChild size="sm" className="w-full" variant={"secondary"}>
         <Link href="/sign-in">Sign in</Link>
       </Button>
       <Button asChild size="sm" className="w-full" variant={"default"}>
