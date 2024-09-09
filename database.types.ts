@@ -624,6 +624,9 @@ export type Database = {
           initiativesCount: number
           party_acronym: string
           resolutionsCount: number
+          votedBillsCount: number
+          votedInitiativesCount: number
+          votedResolutionsCount: number
         }
         Insert: {
           approvedBillsCount: number
@@ -635,6 +638,9 @@ export type Database = {
           initiativesCount: number
           party_acronym: string
           resolutionsCount: number
+          votedBillsCount: number
+          votedInitiativesCount: number
+          votedResolutionsCount: number
         }
         Update: {
           approvedBillsCount?: number
@@ -646,6 +652,9 @@ export type Database = {
           initiativesCount?: number
           party_acronym?: string
           resolutionsCount?: number
+          votedBillsCount?: number
+          votedInitiativesCount?: number
+          votedResolutionsCount?: number
         }
         Relationships: [
           {
