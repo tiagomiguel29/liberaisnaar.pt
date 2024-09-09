@@ -18,6 +18,7 @@ import { Tables } from "@/database.types";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { VoteResultBadge } from "@/components/vote-result-badge";
 
 type Initiative = Tables<"initiatives">;
 
@@ -66,10 +67,13 @@ export default async function Index({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground text-sm">
-                      Submetida em{" "}
-                      {new Date(i.submission_date).toLocaleDateString()}
-                    </p>
+                    <div>
+                      <VoteResultBadge vote={i.firstVoteResult} />
+                      <p className="text-muted-foreground text-sm mt-2">
+                        Submetida em{" "}
+                        {new Date(i.submission_date).toLocaleDateString()}
+                      </p>
+                    </div>
                   </CardContent>
                   <CardFooter>
                     <div className="flex flex-row-reverse w-full">
@@ -90,13 +94,13 @@ export default async function Index({
                 <PaginationContent>
                   {/* Previous button */}
                   {page > 1 && (
-                  <PaginationPrevious
-                    href={`/iniciativas?page=${page - 1}&limit=${limit}`}
-                    isActive={page > 1}
-                  >
-                    Anterior
-                  </PaginationPrevious>
-                    )}
+                    <PaginationPrevious
+                      href={`/iniciativas?page=${page - 1}&limit=${limit}`}
+                      isActive={page > 1}
+                    >
+                      Anterior
+                    </PaginationPrevious>
+                  )}
                   {/* Left Ellipsis (only show if page > 2) */}
                   {page > 2 && (
                     <PaginationItem>
@@ -129,13 +133,13 @@ export default async function Index({
 
                   {/* Next button */}
                   {page < totalPages && (
-                  <PaginationNext
-                    href={`/iniciativas?page=${page + 1}&limit=${limit}`}
-                    isActive={page < totalPages}
-                  >
-                    Seguinte
-                  </PaginationNext>
-                    )}
+                    <PaginationNext
+                      href={`/iniciativas?page=${page + 1}&limit=${limit}`}
+                      isActive={page < totalPages}
+                    >
+                      Seguinte
+                    </PaginationNext>
+                  )}
                 </PaginationContent>
               </Pagination>
             </div>
