@@ -18,7 +18,6 @@ import { Tables } from "@/database.types";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { data } from "autoprefixer";
 
 type Initiative = Tables<"initiatives">;
 
