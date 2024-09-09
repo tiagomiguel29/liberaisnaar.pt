@@ -2,6 +2,7 @@ import Hero from "@/components/hero";
 import supabase from "@/utils/supabase";
 import { Tables } from "@/database.types";
 import { notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
 
 type Party = Tables<"parties">;
@@ -16,9 +17,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 
+
 export const revalidate = 120;
 
-export default async function Index() {
+const getCachedStats = unstable_cache(async () => {
   const partyAcronym = "IL";
   let { data, error } = await supabase
     .from("party_stats")
@@ -30,23 +32,33 @@ export default async function Index() {
     notFound();
   }
 
-  const stats: PartyStats = data![0];
+  return data![0];
+}, ['party_stats'], { revalidate: 120, tags: ['party_stats'] });
 
-  const lastInitiativesRes = await supabase
+const getCachedLastInitiatives = unstable_cache(async () => {
+  const partyAcronym = "IL";
+  const res = await supabase
     .from("initiatives")
     .select("*, initiatives_party_authors!inner(initiativeId, partyAcronym)")
     .eq("initiatives_party_authors.partyAcronym", partyAcronym)
     .order("submission_date", { ascending: false })
     .limit(5);
 
-  if (lastInitiativesRes.error) {
-    console.error(error);
+  if (res.error) {
+    console.error(res.error);
     notFound();
   }
 
-  const lastInitiatives: Initiative[] = lastInitiativesRes.data;
+  return res.data;
+}, ['initiatives'], { revalidate: 120, tags: ['initiatives'] });
 
-  console.log(lastInitiatives.map((i) => i.id));
+export default async function Index() {
+  
+
+  const stats: PartyStats = await getCachedStats();
+
+
+  const lastInitiatives: Initiative[] = await getCachedLastInitiatives();
 
   return (
     <>
