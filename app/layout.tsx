@@ -95,7 +95,7 @@ export default function RootLayout({
               </Sheet>
             </header>
 
-            <div className="w-full p-5 flex flex-col items-center">
+            <div className="w-full flex flex-col items-center">
               {children}
             </div>
 
