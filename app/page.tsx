@@ -16,7 +16,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 
-export const revalidate = 2;
+export const revalidate = 120;
 
 export default async function Index() {
   const partyAcronym = "IL";
