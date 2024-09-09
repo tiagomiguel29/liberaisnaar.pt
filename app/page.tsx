@@ -70,9 +70,9 @@ export default async function Index() {
                 <CardTitle className="text-xl font-bold">Taxa de Aprovação</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-4xl font-bold">{Math.round((stats.approvedInitiativesCount / stats.initiativesCount) * 100)} %</div>
+                <div className="text-4xl font-bold">{Math.round((stats.approvedInitiativesCount / stats.votedInitiativesCount) * 100)} %</div>
                 <p className="text-muted-foreground text-sm">
-                  {stats.approvedInitiativesCount + " " + (stats.approvedInitiativesCount !== 1 ? "Iniciativas Aprovadas" : "Iniciativa Aprovada")}
+                  {stats.approvedInitiativesCount + " " + (stats.approvedInitiativesCount !== 1 ? "iniciativas aprovadas" : "iniciativa aprovada")} de {stats.votedInitiativesCount + " " + (stats.votedInitiativesCount !== 1 ? "votadas" : "votada")}
                 </p>
               </CardContent>
             </Card>
