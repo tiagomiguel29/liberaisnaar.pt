@@ -1,13 +1,14 @@
 import { EnvVarWarning } from "@/components/env-var-warning";
 import HeaderAuth from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetTrigger, SheetContent, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
+import { NavLink } from "@/components/navlink";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -80,14 +81,7 @@ export default function RootLayout({
                       <span>Liberais na AR</span>
                     </Link>
                     {navItems.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="text-lg font-medium hover:text-gray-300 transition-colors"
-                        prefetch={false}
-                      >
-                        {item.name}
-                      </Link>
+                     <NavLink name={item.name} href={item.href} />
                     ))}
                     {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
                   </div>
