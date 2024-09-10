@@ -127,7 +127,7 @@ export default async function InitiativeDetailsPage({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex gap-1">
+                <div className="flex flex-wrap gap-1">
                   {initiative.deputy_authors.map(({ deputy }) => (
                     <Badge
                       className="bg-secondary-foreground"
