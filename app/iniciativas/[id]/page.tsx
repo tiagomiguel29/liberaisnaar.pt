@@ -1,3 +1,4 @@
+import { EventsInitiative } from "@/components/events-initiative";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VoteResultBadge } from "@/components/vote-result-badge";
@@ -10,10 +11,12 @@ type Initiative = Tables<"initiatives">;
 type Deputy = Tables<"deputies">;
 type Party = Tables<"parties">;
 type Attachment = Tables<"attachments">;
+type Event = Tables<"events">;
 
 type ExtendedInitiative = Initiative & {
   deputy_authors: { deputy: Deputy }[];
   party_authors: { party: Party }[];
+  events: Event[];
   attachments: Attachment[];
 };
 
@@ -32,10 +35,12 @@ export default async function InitiativeDetailsPage({
         party_authors:initiatives_party_authors(
             party:parties(acronym, name)
         ),
-        attachments(*)
+        attachments(*),
+        events(*)
         `
     )
     .eq("id", params.id)
+    // Sort events by date
     .single();
 
   if (initiativeRes.error) {
@@ -44,6 +49,10 @@ export default async function InitiativeDetailsPage({
   }
 
   const initiative: ExtendedInitiative = initiativeRes.data;
+
+  const events: Event[] = initiative.events
+
+
   return (
     <main className="flex-1  w-full md:w-3/4 lg:w-2/3 xl:w-2/3 flex flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
       <div className="container mx-auto grid gap-8 md:gap-12">
@@ -103,7 +112,7 @@ export default async function InitiativeDetailsPage({
                           className="bg-secondary-foreground"
                           key={party.acronym}
                         >
-                          {party.name}
+                          {party.acronym}
                         </Badge>
                       ))}
                     </div>
@@ -129,6 +138,16 @@ export default async function InitiativeDetailsPage({
                   ))}
                 </div>
               </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-xl font-bold">
+                        Eventos
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                 <EventsInitiative events={events} />
+                </CardContent>
             </Card>
           </div>
         </div>
