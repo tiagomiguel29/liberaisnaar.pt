@@ -424,7 +424,7 @@ export type Database = {
           text_link: string | null
           title: string
           type: string
-          type_description: string | null
+          type_description: string
         }
         Insert: {
           finalVote?: boolean
@@ -450,7 +450,7 @@ export type Database = {
           text_link?: string | null
           title: string
           type: string
-          type_description?: string | null
+          type_description: string
         }
         Update: {
           finalVote?: boolean
@@ -476,7 +476,7 @@ export type Database = {
           text_link?: string | null
           title?: string
           type?: string
-          type_description?: string | null
+          type_description?: string
         }
         Relationships: []
       }
