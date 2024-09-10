@@ -321,12 +321,12 @@ export type Database = {
           evId: string | null
           id: number
           initiativeId: number
-          oevId: string | null
+          oevId: string
           oevTextId: string | null
           other_activities_id: string[] | null
           phase: string | null
           phase_code: string | null
-          phase_date: string | null
+          phase_date: string
           phase_obs: string | null
         }
         Insert: {
@@ -335,12 +335,12 @@ export type Database = {
           evId?: string | null
           id?: number
           initiativeId: number
-          oevId?: string | null
+          oevId: string
           oevTextId?: string | null
           other_activities_id?: string[] | null
           phase?: string | null
           phase_code?: string | null
-          phase_date?: string | null
+          phase_date: string
           phase_obs?: string | null
         }
         Update: {
@@ -349,12 +349,12 @@ export type Database = {
           evId?: string | null
           id?: number
           initiativeId?: number
-          oevId?: string | null
+          oevId?: string
           oevTextId?: string | null
           other_activities_id?: string[] | null
           phase?: string | null
           phase_code?: string | null
-          phase_date?: string | null
+          phase_date?: string
           phase_obs?: string | null
         }
         Relationships: [
