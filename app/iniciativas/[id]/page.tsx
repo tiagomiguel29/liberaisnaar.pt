@@ -5,7 +5,6 @@ import { VoteResultBadge } from "@/components/vote-result-badge";
 import { Tables } from "@/database.types";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
-import { consumers } from "stream";
 
 type Initiative = Tables<"initiatives">;
 type Deputy = Tables<"deputies">;
