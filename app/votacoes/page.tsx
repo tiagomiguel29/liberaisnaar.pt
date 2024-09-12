@@ -23,7 +23,6 @@ import { notFound } from "next/navigation";
 import { VoteResultBadge } from "@/components/vote-result-badge";
 import { ThumbsDownIcon, ThumbsUpIcon, VoteIcon } from "lucide-react";
 import Link from "next/link";
-import { init } from "next/dist/compiled/webpack/webpack";
 
 type Initiative = Tables<"initiatives">;
 type Event = Tables<"events">;
@@ -42,7 +41,7 @@ type ExtendedVote = Vote & {
 };
 
 type ExtendedInitiative = Initiative & {
-    party_authors: { party: Party }[];
+  party_authors: { party: Party }[];
 };
 
 export default async function Index({
@@ -78,8 +77,6 @@ export default async function Index({
 
   const votes: ExtendedVote[] = votesRes.data;
 
-  console.log(votes[0].event.initiative.party_authors)
-
   return (
     <>
       <main className="flex-1 w-full md:w-3/4 lg:w-2/3 xl:w-2/3 flex flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
@@ -110,7 +107,7 @@ export default async function Index({
                   </CardContent>
                   <CardFooter className="flex flex-col md:flex-row md:justify-between gap-y-2">
                     <div>
-                       <PartyAuthors initiative={v.event.initiative} />
+                      <PartyAuthors initiative={v.event.initiative} />
                     </div>
                     <Link
                       href={`/iniciativas/${v.event.initiative.id}`}
@@ -214,20 +211,17 @@ const ILVote = async ({ vote }: { vote: ExtendedVote }) => {
   );
 };
 
-const PartyAuthors = ({initiative}: {initiative: ExtendedInitiative}) => {
-    if (initiative.party_authors.length > 0) {
-        return (
-            <div>
-                Partidos: {initiative.party_authors.map(({ party }) => party.acronym).join(", ")}
-            </div>
-        )
-    }
-
-    const otherAuthors = initiative.other_authors
-
+const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
+  if (initiative.party_authors.length > 0) {
     return (
-        <div>
-            Autores: {otherAuthors?.map((a) => a).join(", ")}
-        </div>
-    )
-}
+      <div>
+        Partidos:{" "}
+        {initiative.party_authors.map(({ party }) => party.acronym).join(", ")}
+      </div>
+    );
+  }
+
+  const otherAuthors = initiative.other_authors;
+
+  return <div>Autores: {otherAuthors?.map((a) => a).join(", ")}</div>;
+};
