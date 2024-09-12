@@ -21,6 +21,11 @@ import Link from "next/link";
 import { VoteResultBadge } from "@/components/vote-result-badge";
 
 type Initiative = Tables<"initiatives">;
+type Party = Tables<"parties">;
+
+type ExtendedInitiative = Initiative & {
+    party_authors: { party: Party }[];
+  };
 
 export default async function Index({
   searchParams,
@@ -35,7 +40,10 @@ export default async function Index({
 
   const initiativesRes = await supabase
     .from("initiatives")
-    .select("*, initiatives_party_authors!inner(initiativeId, partyAcronym)", {
+    .select(`*,
+        initiatives_party_authors!inner(initiativeId, partyAcronym),
+        party_authors:initiatives_party_authors(party:parties(acronym))
+        `, {
       count: "exact",
     })
     .eq("initiatives_party_authors.partyAcronym", partyAcronym)
@@ -48,7 +56,7 @@ export default async function Index({
     notFound();
   }
 
-  const initiatives: Initiative[] = initiativesRes.data;
+  const initiatives: ExtendedInitiative[] = initiativesRes.data;
   const totalInitiatives = initiativesRes.count ?? 0;
   const totalPages = Math.ceil(totalInitiatives / limit);
 
@@ -74,6 +82,7 @@ export default async function Index({
                         {new Date(i.submission_date).toLocaleDateString()}
                       </p>
                     </div>
+                    <PartyAuthors initiative={i} />
                   </CardContent>
                   <CardFooter>
                     <div className="flex flex-row-reverse w-full">
@@ -149,3 +158,18 @@ export default async function Index({
     </>
   );
 }
+
+const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
+  if (initiative.party_authors.length > 0) {
+    return (
+      <p className="text-muted-foreground text-sm mt-2">
+        Partidos:{" "}
+        {initiative.party_authors.map(({ party }) => party.acronym).join(", ")}
+      </p>
+    );
+  }
+
+  const otherAuthors = initiative.other_authors;
+
+  return <p className="text-muted-foreground text-sm mt-2">Autores: {otherAuthors?.map((a) => a).join(", ")}</p>;
+};
