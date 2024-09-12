@@ -22,6 +22,8 @@ import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 import { VoteResultBadge } from "@/components/vote-result-badge";
 import { ThumbsDownIcon, ThumbsUpIcon, VoteIcon } from "lucide-react";
+import Link from "next/link";
+import { init } from "next/dist/compiled/webpack/webpack";
 
 type Initiative = Tables<"initiatives">;
 type Event = Tables<"events">;
@@ -29,7 +31,7 @@ type Vote = Tables<"votes">;
 type Party = Tables<"parties">;
 
 type ExtendedEvent = Event & {
-  initiative: Initiative;
+  initiative: ExtendedInitiative;
 };
 
 type ExtendedVote = Vote & {
@@ -37,6 +39,10 @@ type ExtendedVote = Vote & {
   against: { party: Party }[];
   abstained: { party: Party }[];
   event: ExtendedEvent;
+};
+
+type ExtendedInitiative = Initiative & {
+    party_authors: { party: Party }[];
 };
 
 export default async function Index({
@@ -57,7 +63,7 @@ export default async function Index({
         inFavor:_InFavorVotes(party:parties(acronym)),
         against:_AgainstVotes(party:parties(acronym)),
         abstained:_AbstainedVotes(party:parties(acronym)),
-        event:events(*, initiative:initiatives(*))
+        event:events(*, initiative:initiatives(*, party_authors:initiatives_party_authors(party:parties(acronym))))
         `,
       { count: "exact" }
     )
@@ -72,6 +78,8 @@ export default async function Index({
 
   const votes: ExtendedVote[] = votesRes.data;
 
+  console.log(votes[0].event.initiative.party_authors)
+
   return (
     <>
       <main className="flex-1 w-full md:w-3/4 lg:w-2/3 xl:w-2/3 flex flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
@@ -82,13 +90,17 @@ export default async function Index({
               {votes.map((v) => (
                 <Card>
                   <CardHeader>
-                    <CardTitle>{v.event.initiative.title}</CardTitle>
-                    <CardDescription>{v.event.phase}</CardDescription>
-                    <CardDescription>
-                      <span className="text-muted-foreground">
-                        {new Date(v.event.phase_date).toLocaleDateString()}
-                      </span>
-                    </CardDescription>
+                    <div className="flex flex-col md:flex-row md:justify-between">
+                      <div>
+                        <CardTitle>{v.event.initiative.title}</CardTitle>
+                        <CardDescription>{v.event.phase}</CardDescription>
+                        <CardDescription>
+                          <span className="text-muted-foreground">
+                            {new Date(v.event.phase_date).toLocaleDateString()}
+                          </span>
+                        </CardDescription>
+                      </div>
+                    </div>
                   </CardHeader>
                   <CardContent className="flex flex-col-reverse gap-y-3 md:flex-row md:items-center md:justify-between">
                     <ILVote vote={v} />
@@ -96,6 +108,18 @@ export default async function Index({
                       <VoteResultBadge vote={v.result} />
                     </div>
                   </CardContent>
+                  <CardFooter className="flex flex-col md:flex-row md:justify-between gap-y-2">
+                    <div>
+                       <PartyAuthors initiative={v.event.initiative} />
+                    </div>
+                    <Link
+                      href={`/iniciativas/${v.event.initiative.id}`}
+                      className="inline-flex h-9 w-full md:w-fit items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                      prefetch={false}
+                    >
+                      Consultar Iniciativa
+                    </Link>
+                  </CardFooter>
                 </Card>
               ))}
             </div>
@@ -161,13 +185,6 @@ export default async function Index({
 }
 
 const ILVote = async ({ vote }: { vote: ExtendedVote }) => {
-  console.log(vote.unanimous);
-  console.log(vote.id);
-  console.log(vote.event.initiative.initiative_id);
-  console.log(vote.inFavor);
-  console.log(vote.against);
-  console.log(vote.abstained);
-  console.log(vote.detail);
   if (
     vote.inFavor.some(({ party }) => party.acronym === "IL") ||
     vote.unanimous
@@ -196,3 +213,21 @@ const ILVote = async ({ vote }: { vote: ExtendedVote }) => {
     </div>
   );
 };
+
+const PartyAuthors = ({initiative}: {initiative: ExtendedInitiative}) => {
+    if (initiative.party_authors.length > 0) {
+        return (
+            <div>
+                Partidos: {initiative.party_authors.map(({ party }) => party.acronym).join(", ")}
+            </div>
+        )
+    }
+
+    const otherAuthors = initiative.other_authors
+
+    return (
+        <div>
+            Autores: {otherAuthors?.map((a) => a).join(", ")}
+        </div>
+    )
+}
