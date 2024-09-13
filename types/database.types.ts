@@ -367,6 +367,42 @@ export type Database = {
           },
         ]
       }
+      followed_initiatives: {
+        Row: {
+          created_at: string
+          id: number
+          initiative_id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          initiative_id: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          initiative_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "followed_initiatives_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "followed_initiatives_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       government_members: {
         Row: {
           government: string
