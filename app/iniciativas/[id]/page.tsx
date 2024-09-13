@@ -1,10 +1,15 @@
 import { EventsInitiative } from "@/components/events-initiative";
+import { FollowButton } from "@/components/follow-button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VoteResultBadge } from "@/components/vote-result-badge";
-import { EventWithVotes, ExtendedInitiative } from "@/types/extended.types";
+import {
+  EventWithVotes,
+  ExtendedInitiative,
+  Follow,
+} from "@/types/extended.types";
 import supabase from "@/utils/supabase";
-import { init } from "next/dist/compiled/webpack/webpack";
+import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 
 export default async function InitiativeDetailsPage({
@@ -31,7 +36,6 @@ export default async function InitiativeDetailsPage({
         `
     )
     .eq("id", params.id)
-    // Sort events by date
     .single();
 
   if (initiativeRes.error) {
@@ -42,6 +46,25 @@ export default async function InitiativeDetailsPage({
   const initiative: ExtendedInitiative = initiativeRes.data;
 
   const events: EventWithVotes[] = initiative.events;
+
+  let followed: Follow[] = [];
+
+  const {
+    data: { user },
+  } = await createClient().auth.getUser();
+
+  if (user) {
+    const followedRes = await createClient()
+      .from("followed_initiatives")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("initiative_id", initiative.id);
+    if (followedRes.error) {
+      console.error(followedRes.error);
+    } else {
+      followed = followedRes.data;
+    }
+  }
 
   return (
     <main className="flex-1  w-full md:w-3/4 lg:w-2/3 xl:w-2/3 flex flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
@@ -61,7 +84,16 @@ export default async function InitiativeDetailsPage({
                       "/" +
                       initiative.legislative_session}
                   </CardTitle>
-                  <VoteResultBadge vote={initiative.firstVoteResult} />
+                  <div className="flex flex-row gap-x-2 items-center">
+                    <VoteResultBadge vote={initiative.firstVoteResult} />
+                    {user && (
+                      <FollowButton
+                        initiativeId={initiative.id}
+                        followed={followed}
+                        userId={user.id}
+                      />
+                    )}
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
