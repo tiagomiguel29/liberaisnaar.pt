@@ -14,15 +14,13 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Tables } from "@/types/database.types";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { VoteResultBadge } from "@/components/vote-result-badge";
-import { ExtendedInitiative } from "@/types/extended.types";
-
-type Initiative = Tables<"initiatives">;
-type Party = Tables<"parties">;
+import { ExtendedInitiative, Follow } from "@/types/extended.types";
+import { createClient } from "@/utils/supabase/server";
+import { FollowButton } from "@/components/follow-button";
 
 export default async function Index({
   searchParams,
@@ -37,12 +35,15 @@ export default async function Index({
 
   const initiativesRes = supabase
     .from("initiatives")
-    .select(`*,
+    .select(
+      `*,
         initiatives_party_authors!inner(initiativeId, partyAcronym),
         party_authors:initiatives_party_authors(party:parties(*))
-        `, {
-      count: "exact",
-    })
+        `,
+      {
+        count: "exact",
+      }
+    )
     .eq("initiatives_party_authors.partyAcronym", partyAcronym)
     .order("submission_date", { ascending: true })
     .order("number", { ascending: true })
@@ -59,6 +60,28 @@ export default async function Index({
   const totalInitiatives = count ?? 0;
   const totalPages = Math.ceil(totalInitiatives / limit);
 
+  const {
+    data: { user },
+  } = await createClient().auth.getUser();
+
+  const initiativesIds: Number[] = initiatives.map((i) => i.id);
+
+  let followedInitiatives: Follow[] = [];
+
+  if (user) {
+    const followRes = await createClient()
+      .from("followed_initiatives")
+      .select("*")
+      .eq("user_id", user.id)
+      .in("initiative_id", initiativesIds);
+
+    if (followRes.error) {
+      console.error(followRes.error);
+    } else {
+      followedInitiatives = followRes.data;
+    }
+  }
+
   return (
     <>
       <main className="flex-1 w-full md:w-3/4 lg:w-2/3 xl:w-2/3 flex flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
@@ -69,9 +92,16 @@ export default async function Index({
               {initiatives.map((i) => (
                 <Card key={i.id}>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-lg font-bold">
-                      {i.title}
-                    </CardTitle>
+                    <div className="flex justify-between">
+                      <CardTitle className="text-lg font-bold">
+                        {i.title}
+                      </CardTitle>
+                      {user && <FollowButton
+                        initiativeId={i.id}
+                        userId={user?.id}
+                        followed={followedInitiatives}
+                      />}
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <div>
@@ -170,5 +200,10 @@ const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
 
   const otherAuthors = initiative.other_authors;
 
-  return <p className="text-muted-foreground text-sm mt-2">Autores: {otherAuthors?.map((a) => a).join(", ")}</p>;
+  return (
+    <p className="text-muted-foreground text-sm mt-2">
+      Autores: {otherAuthors?.map((a) => a).join(", ")}
+    </p>
+  );
 };
+

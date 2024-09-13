@@ -6,6 +6,7 @@ type Party = Tables<"parties">;
 type Attachment = Tables<"attachments">;
 type Event = Tables<"events">;
 type Vote = Tables<"votes">;
+export type Follow = Tables<"followed_initiatives">;
 
 export type VoteWithParties = Vote & {
     inFavor: { party: Party }[];
