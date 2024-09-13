@@ -17,32 +17,13 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
-import { Tables } from "@/database.types";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 import { VoteResultBadge } from "@/components/vote-result-badge";
 import { ThumbsDownIcon, ThumbsUpIcon, VoteIcon } from "lucide-react";
 import Link from "next/link";
+import { ExtendedVote, InitiativeWithParties } from "@/types/extended.types";
 
-type Initiative = Tables<"initiatives">;
-type Event = Tables<"events">;
-type Vote = Tables<"votes">;
-type Party = Tables<"parties">;
-
-type ExtendedEvent = Event & {
-  initiative: ExtendedInitiative;
-};
-
-type ExtendedVote = Vote & {
-  inFavor: { party: Party }[];
-  against: { party: Party }[];
-  abstained: { party: Party }[];
-  event: ExtendedEvent;
-};
-
-type ExtendedInitiative = Initiative & {
-  party_authors: { party: Party }[];
-};
 
 export default async function Index({
   searchParams,
@@ -211,7 +192,7 @@ const ILVote = async ({ vote }: { vote: ExtendedVote }) => {
   );
 };
 
-const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
+const PartyAuthors = ({ initiative }: { initiative:  InitiativeWithParties}) => {
   if (initiative.party_authors.length > 0) {
     return (
       <div>

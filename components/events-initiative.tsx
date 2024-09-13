@@ -1,20 +1,6 @@
-import { Tables } from "@/database.types";
+import { EventWithVotes, VoteWithParties } from "@/types/extended.types";
 
-type Event = Tables<"events">;
-type Vote = Tables<"votes">;
-type Party = Tables<"parties">;
-
-type ExtendedEvent = Event & {
- votes: ExtendedVote[];
-}
-
-type ExtendedVote = Vote & {
-  inFavor: { party: Party }[];
-  against: { party: Party }[];
-  abstained: { party: Party }[];
-};
-
-export function EventsInitiative({ events }: { events: ExtendedEvent[] }) {
+export function EventsInitiative({ events }: { events: EventWithVotes[] }) {
   if (!events.length) return null;
 
   // Sort by id
@@ -43,9 +29,7 @@ export function EventsInitiative({ events }: { events: ExtendedEvent[] }) {
   );
 }
 
-const VoteDescription = ({ vote }: { vote: ExtendedVote }) => {
-
-  console.log(vote);
+const VoteDescription = ({ vote }: { vote: VoteWithParties }) => {
 
   if (vote.unanimous) {
     return (

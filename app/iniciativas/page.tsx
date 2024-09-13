@@ -14,18 +14,15 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Tables } from "@/database.types";
+import { Tables } from "@/types/database.types";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { VoteResultBadge } from "@/components/vote-result-badge";
+import { ExtendedInitiative } from "@/types/extended.types";
 
 type Initiative = Tables<"initiatives">;
 type Party = Tables<"parties">;
-
-type ExtendedInitiative = Initiative & {
-    party_authors: { party: Party }[];
-  };
 
 export default async function Index({
   searchParams,
@@ -38,11 +35,11 @@ export default async function Index({
 
   const partyAcronym = "IL";
 
-  const initiativesRes = await supabase
+  const initiativesRes = supabase
     .from("initiatives")
     .select(`*,
         initiatives_party_authors!inner(initiativeId, partyAcronym),
-        party_authors:initiatives_party_authors(party:parties(acronym))
+        party_authors:initiatives_party_authors(party:parties(*))
         `, {
       count: "exact",
     })
@@ -51,13 +48,15 @@ export default async function Index({
     .order("number", { ascending: true })
     .range((page - 1) * limit, page * limit - 1);
 
-  if (initiativesRes.error) {
-    console.error(initiativesRes.error);
+  const { data, error, count } = await initiativesRes;
+
+  if (error) {
+    console.error(error);
     notFound();
   }
 
-  const initiatives: ExtendedInitiative[] = initiativesRes.data;
-  const totalInitiatives = initiativesRes.count ?? 0;
+  const initiatives: ExtendedInitiative[] = data;
+  const totalInitiatives = count ?? 0;
   const totalPages = Math.ceil(totalInitiatives / limit);
 
   return (

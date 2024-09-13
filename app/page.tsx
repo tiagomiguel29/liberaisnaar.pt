@@ -1,6 +1,6 @@
 import Hero from "@/components/hero";
 import supabase from "@/utils/supabase";
-import { Tables } from "@/database.types";
+import { Tables } from "@/types/database.types";
 import { notFound } from "next/navigation";
 import { unstable_cache } from "next/cache";
 import Link from "next/link";
@@ -56,7 +56,6 @@ export default async function Index() {
   
 
   const stats: PartyStats = await getCachedStats();
-
 
   const lastInitiatives: Initiative[] = await getCachedLastInitiatives();
 

@@ -2,31 +2,9 @@ import { EventsInitiative } from "@/components/events-initiative";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VoteResultBadge } from "@/components/vote-result-badge";
-import { Tables } from "@/database.types";
+import { EventWithVotes, ExtendedInitiative } from "@/types/extended.types";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
-
-type Initiative = Tables<"initiatives">;
-type Deputy = Tables<"deputies">;
-type Party = Tables<"parties">;
-type Attachment = Tables<"attachments">;
-type Event = Tables<"events">;
-type Vote = Tables<"votes">;
-
-type ExtendedInitiative = Initiative & {
-  deputy_authors: { deputy: Deputy }[];
-  party_authors: { party: Party }[];
-  events: ExtendedEvent[];
-  attachments: Attachment[];
-};
-
-type ExtendedEvent = Event & {
-  votes: ExtendedVote[];
- }
- 
- type ExtendedVote = Vote & {
-   party: Party;
- };
 
 export default async function InitiativeDetailsPage({
   params,
@@ -62,7 +40,7 @@ export default async function InitiativeDetailsPage({
 
   const initiative: ExtendedInitiative = initiativeRes.data;
 
-  const events: ExtendedEvent[] = initiative.events;
+  const events: EventWithVotes[] = initiative.events;
 
 
   return (
