@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VoteResultBadge } from "@/components/vote-result-badge";
 import { EventWithVotes, ExtendedInitiative } from "@/types/extended.types";
 import supabase from "@/utils/supabase";
+import { init } from "next/dist/compiled/webpack/webpack";
 import { notFound } from "next/navigation";
 
 export default async function InitiativeDetailsPage({
@@ -93,19 +94,7 @@ export default async function InitiativeDetailsPage({
                       ).toLocaleDateString()}
                     </div>
                   </div>
-                  <div className="grid gap-2">
-                    <div className="font-bold">Partidos</div>
-                    <div className="flex flex-wrap gap-1">
-                      {initiative.party_authors.map(({ party }) => (
-                        <Badge
-                          className="bg-secondary-foreground"
-                          key={party.acronym}
-                        >
-                          {party.acronym}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
+                  <PartyAuthors initiative={initiative} />
                 </div>
               </CardContent>
             </Card>
@@ -144,3 +133,33 @@ export default async function InitiativeDetailsPage({
     </main>
   );
 }
+
+const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
+  if (initiative.party_authors.length > 0) {
+    return (
+      <div className="grid gap-2">
+        <div className="font-bold">Partidos</div>
+        <div className="flex flex-wrap gap-1">
+          {initiative.party_authors.map(({ party }) => (
+            <Badge className="bg-secondary-foreground" key={party.acronym}>
+              {party.acronym}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-2">
+      <div className="font-bold">Autores</div>
+      <div className="flex flex-wrap gap-1">
+        {initiative.other_authors?.map((a) => (
+          <Badge className="bg-secondary-foreground" key={a}>
+            {a}
+          </Badge>
+        ))}
+      </div>
+    </div>
+  );
+};
