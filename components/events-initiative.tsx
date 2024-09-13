@@ -1,14 +1,24 @@
 import { Tables } from "@/database.types";
 
 type Event = Tables<"events">;
+type Vote = Tables<"votes">;
+type Party = Tables<"parties">;
 
-export function EventsInitiative({ events }: { events: Event[] }) {
+type ExtendedEvent = Event & {
+ votes: ExtendedVote[];
+}
+
+type ExtendedVote = Vote & {
+  inFavor: { party: Party }[];
+  against: { party: Party }[];
+  abstained: { party: Party }[];
+};
+
+export function EventsInitiative({ events }: { events: ExtendedEvent[] }) {
   if (!events.length) return null;
 
   // Sort by id
   events.sort((a, b) => a.id - b.id);
-
-
 
   return (
     <div className="px-6 sm:px-10">
@@ -21,9 +31,58 @@ export function EventsInitiative({ events }: { events: Event[] }) {
             </div>
             <div className="font-medium">{event.phase}</div>
             <div className="text-muted-foreground">ID: {event.oevId}</div>
+            {
+              event.votes.map((vote) => (
+                <VoteDescription vote={vote} />
+              ))
+            }
           </div>
         ))}
       </div>
     </div>
   );
 }
+
+const VoteDescription = ({ vote }: { vote: ExtendedVote }) => {
+
+  console.log(vote);
+
+  if (vote.unanimous) {
+    return (
+      <div className="font-medium">Aprovado por unanimidade</div>
+    )
+  }
+  
+
+  return (
+    <div>
+      <div className="font-medium underline">
+        {vote.result}
+      </div>
+      {vote.inFavor.length > 0 && (
+      <div>
+        <span className="font-medium">A favor: </span>
+        {vote.inFavor.map((p) => 
+          p.party.acronym).join(", ")
+        }
+        </div>
+      )}
+      {vote.against.length > 0 && (
+        <div>
+          <span className="font-medium">Contra: </span>
+          {vote.against.map((p) => 
+            p.party.acronym).join(", ")
+          }
+        </div>
+      )}
+      {vote.abstained.length > 0 && (
+        <div>
+          <span className="font-medium">Abstiveram-se: </span>
+          {vote.abstained.map((p) => 
+            p.party.acronym).join(", ")
+          }
+        </div>
+      )}
+    </div>
+  )
+};

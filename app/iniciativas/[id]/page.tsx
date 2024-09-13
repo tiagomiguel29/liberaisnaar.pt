@@ -11,13 +11,22 @@ type Deputy = Tables<"deputies">;
 type Party = Tables<"parties">;
 type Attachment = Tables<"attachments">;
 type Event = Tables<"events">;
+type Vote = Tables<"votes">;
 
 type ExtendedInitiative = Initiative & {
   deputy_authors: { deputy: Deputy }[];
   party_authors: { party: Party }[];
-  events: Event[];
+  events: ExtendedEvent[];
   attachments: Attachment[];
 };
+
+type ExtendedEvent = Event & {
+  votes: ExtendedVote[];
+ }
+ 
+ type ExtendedVote = Vote & {
+   party: Party;
+ };
 
 export default async function InitiativeDetailsPage({
   params,
@@ -35,7 +44,11 @@ export default async function InitiativeDetailsPage({
             party:parties(acronym, name)
         ),
         attachments(*),
-        events(*)
+        events(*, votes:votes(*,
+          inFavor:_InFavorVotes(party:parties(acronym)),
+          against:_AgainstVotes(party:parties(acronym)),
+          abstained:_AbstainedVotes(party:parties(acronym))
+        ))
         `
     )
     .eq("id", params.id)
@@ -49,7 +62,7 @@ export default async function InitiativeDetailsPage({
 
   const initiative: ExtendedInitiative = initiativeRes.data;
 
-  const events: Event[] = initiative.events
+  const events: ExtendedEvent[] = initiative.events;
 
 
   return (
