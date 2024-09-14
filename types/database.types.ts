@@ -631,6 +631,35 @@ export type Database = {
           },
         ]
       }
+      notification_settings: {
+        Row: {
+          followed_initiatives: boolean
+          id: number
+          new_initiatives: boolean
+          user_id: string
+        }
+        Insert: {
+          followed_initiatives?: boolean
+          id?: number
+          new_initiatives?: boolean
+          user_id: string
+        }
+        Update: {
+          followed_initiatives?: boolean
+          id?: number
+          new_initiatives?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_settings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       parties: {
         Row: {
           acronym: string
