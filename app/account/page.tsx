@@ -13,6 +13,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { NotificationSettings } from "./notifications.client";
+import { Tables } from "@/types/database.types";
+
+type NotificationSettings = Tables<"notification_settings">
+
 
 export default async function ProtectedPage() {
   const supabase = createClient();
@@ -24,6 +29,15 @@ export default async function ProtectedPage() {
   if (!user) {
     return redirect("/sign-in");
   }
+
+  const { data, error } = await supabase.from("notification_settings").select("*").eq("user_id", user.id).single();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  const notificationsSettings: NotificationSettings = data;
 
   return (
     <>
@@ -117,39 +131,7 @@ export default async function ProtectedPage() {
                   <Button>Atualizar Segurança</Button>
                 </CardFooter>
               </Card>
-              <Card id="notifications">
-                <CardHeader>
-                  <CardTitle>Notificações</CardTitle>
-                  <CardDescription>
-                    Gere as tuas notificações.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-6">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox id="new-initiatives" />
-                      <label
-                        htmlFor="new-initiatives"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Novas Iniciativas
-                      </label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox id="followed-initiatives" />
-                      <label
-                        htmlFor="followed-initiatives"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                       Iniciativas Guardadas
-                      </label>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="border-t p-6">
-                  <Button>Guardar</Button>
-                </CardFooter>
-              </Card>
+              <NotificationSettings notificationSettings={notificationsSettings} />
             </div>
           </div>
         </main>
