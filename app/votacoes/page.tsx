@@ -70,8 +70,15 @@ export default async function Index({
                   <CardHeader>
                     <div className="flex flex-col md:flex-row md:justify-between">
                       <div>
-                        <CardTitle>{v.event.initiative.title}</CardTitle>
-                        <CardDescription>{v.event.phase}</CardDescription>
+                        <CardTitle className="mb-1">{v.event.initiative.title}</CardTitle>
+                        <CardDescription>{v.event.initiative.type_description +
+                      " " +
+                      v.event.initiative.number +
+                      "/" +
+                      v.event.initiative.legislature +
+                      "/" +
+                      v.event.initiative.legislative_session}</CardDescription>
+                        <CardDescription className="underline">{v.event.phase}</CardDescription>
                         <CardDescription>
                           <span className="text-muted-foreground">
                             {new Date(v.event.phase_date).toLocaleDateString()}
