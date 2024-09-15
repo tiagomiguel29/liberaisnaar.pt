@@ -203,7 +203,7 @@ const PartyAuthors = ({ initiative }: { initiative:  InitiativeWithParties}) => 
   if (initiative.party_authors.length > 0) {
     return (
       <div>
-        Partidos:{" "}
+        Partidos Autores:{" "}
         {initiative.party_authors.map(({ party }) => party.acronym).join(", ")}
       </div>
     );
