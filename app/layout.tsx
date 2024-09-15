@@ -9,6 +9,7 @@ import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
 import { NavLink } from "@/components/navlink";
+import { Toaster } from "react-hot-toast";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -42,6 +43,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Toaster position="top-right" />
           <main className="min-h-screen flex flex-col items-center">
             <header className="bg-primary w-full text-white py-4 px-6 md:px-8 flex items-center justify-between">
               <Link

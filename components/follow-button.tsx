@@ -5,6 +5,8 @@ import { Button } from "./ui/button";
 import { BookmarkIcon } from "lucide-react";
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import toast from "react-hot-toast";
+import { resolve } from "path";
 
 export const FollowButton = ({
   initiativeId,
@@ -19,40 +21,67 @@ export const FollowButton = ({
     followed.some((f) => f.initiative_id === initiativeId)
   );
 
-  const follow = async () => {
-    const { data, error } = await createClient()
-      .from("followed_initiatives")
-      .insert([
-        {
-          user_id: userId,
-          initiative_id: initiativeId,
-        },
-      ]);
+  const followReq = async () => {
+    return new Promise(async (resolve, reject) => {
+      const { data, error } = await createClient()
+        .from("followed_initiatives")
+        .insert([
+          {
+            user_id: userId,
+            initiative_id: initiativeId,
+          },
+        ]);
 
-    if (error) {
-      console.error(error);
-      return;
-    }
-    setIsFollowing(true);
+      if (error) {
+        console.error(error);
+        reject(new Error("Error following inititative."));
+      } else {
+        setIsFollowing(true);
+        resolve(true);
+      }
+    });
+  };
+
+  const unfollowReq = () => {
+    return new Promise(async (resolve, reject) => {
+      const { error } = await createClient()
+        .from("followed_initiatives")
+        .delete()
+        .eq("user_id", userId)
+        .eq("initiative_id", initiativeId);
+
+      if (error) {
+        console.error(error);
+        reject(new Error("Error unfollowing inititative."));
+      } else {
+        setIsFollowing(false);
+        resolve(true);
+      }
+    });
   };
 
   const unfollow = async () => {
-    const { error } = await createClient()
-      .from("followed_initiatives")
-      .delete()
-      .eq("user_id", userId)
-      .eq("initiative_id", initiativeId);
+    toast.promise(unfollowReq(), {
+      loading: "A adicionar...",
+      success: <b>Iniciative removida!</b>,
+      error: <b>Error ao remover iniciativa.</b>,
+    });
+  };
 
-    if (error) {
-      console.error(error);
-      return;
-    }
-    setIsFollowing(false);
-  }
+  const follow = async () => {
+    toast.promise(followReq(), {
+      loading: "A adicionar...",
+      success: <b>Iniciativa adicionada!</b>,
+      error: <b>Error ao adicionar iniciativa.</b>,
+    });
+  };
 
   return (
-    <Button variant="ghost" size="icon" className="h-8 w-8"
-        onClick={isFollowing ? unfollow : follow}
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-8 w-8"
+      onClick={isFollowing ? unfollow : follow}
     >
       <BookmarkIcon
         className={`h-5 w-5 ${
