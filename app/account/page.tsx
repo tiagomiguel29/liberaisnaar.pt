@@ -42,7 +42,7 @@ export default async function ProtectedPage() {
   return (
     <>
       <div className="flex flex-col w-full min-h-screen">
-        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 bg-muted/40 rounded-lg shadow-sm">
+        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 rounded-lg shadow-sm">
           <div className="max-w-6xl w-full mx-auto grid gap-2">
             <h1 className="font-semibold text-3xl">Account Settings</h1>
           </div>
