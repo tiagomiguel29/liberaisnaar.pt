@@ -34,8 +34,6 @@ export default async function Index({
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10;
 
-  const partyAcronym = "IL";
-
   const votesRes = await supabase
     .from("votes")
     .select(
@@ -78,7 +76,7 @@ export default async function Index({
                       v.event.initiative.legislature +
                       "/" +
                       v.event.initiative.legislative_session}</CardDescription>
-                        <CardDescription className="underline">{v.event.phase}</CardDescription>
+                        <CardDescription><span className="underline">{v.event.phase}</span>{v.description && <span> - {v.description}</span>}</CardDescription>
                         <CardDescription>
                           <span className="text-muted-foreground">
                             {new Date(v.event.phase_date).toLocaleDateString()}
