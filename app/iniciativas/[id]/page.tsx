@@ -1,6 +1,7 @@
 import { EventsInitiative } from "@/components/events-initiative";
 import { FollowButton } from "@/components/follow-button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VoteResultBadge } from "@/components/vote-result-badge";
 import {
@@ -10,6 +11,8 @@ import {
 } from "@/types/extended.types";
 import supabase from "@/utils/supabase";
 import { createClient } from "@/utils/supabase/server";
+import { FileIcon } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default async function InitiativeDetailsPage({
@@ -125,6 +128,13 @@ export default async function InitiativeDetailsPage({
                         initiative.submission_date
                       ).toLocaleDateString()}
                     </div>
+                  </div>
+                  <div>
+                    <Button asChild size="sm" variant="default">
+                      <Link href={initiative.text_link!} target="_blank" className="flex items-center gap-x-2">Ver Texto
+                      <FileIcon className="w-4 h-4" />
+                      </Link>
+                    </Button>
                   </div>
                   <PartyAuthors initiative={initiative} />
                 </div>
