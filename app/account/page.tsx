@@ -16,7 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { NotificationSettings } from "./notifications.client";
 import { Tables } from "@/types/database.types";
 
-type NotificationSettings = Tables<"notification_settings">
+type UserPreferences = Tables<"user_preferences">;
 
 
 export default async function ProtectedPage() {
@@ -30,14 +30,14 @@ export default async function ProtectedPage() {
     return redirect("/sign-in");
   }
 
-  const { data, error } = await supabase.from("notification_settings").select("*").eq("user_id", user.id).single();
+  const { data, error } = await supabase.from("user_preferences").select("*").eq("user_id", user.id).single();
 
   if (error) {
     console.error(error);
     return null;
   }
 
-  const notificationsSettings: NotificationSettings = data;
+  const notificationsSettings: UserPreferences = data;
 
   return (
     <>

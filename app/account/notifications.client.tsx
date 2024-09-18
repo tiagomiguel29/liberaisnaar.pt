@@ -15,23 +15,26 @@ import { createClient } from "@/utils/supabase/client";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-type NotificationSettings = Tables<"notification_settings">;
+type UserPreferences = Tables<"user_preferences">;
 
 export const NotificationSettings = ({
   notificationSettings,
 }: {
-  notificationSettings: NotificationSettings;
+  notificationSettings: UserPreferences;
 }) => {
   const supabase = createClient();
 
   const [settings, setSettings] =
-    useState<NotificationSettings>(notificationSettings);
+    useState<UserPreferences>(notificationSettings);
 
   async function saveSettingsReq() {
     return new Promise(async (resolve, reject) => {
       const { error } = await supabase
-        .from("notification_settings")
-        .upsert(settings)
+        .from("user_preferences")
+        .update({
+          followed_initiatives_notify: settings.followed_initiatives_notify,
+          new_initiatives_notify: settings.new_initiatives_notify,
+        })
         .eq("user_id", settings.user_id)
         .single();
       if (error) {
@@ -62,11 +65,11 @@ export const NotificationSettings = ({
           <div className="flex items-center space-x-2">
             <Checkbox
               id="new-initiatives"
-              checked={settings.new_initiatives}
+              checked={settings.new_initiatives_notify}
               onCheckedChange={() =>
                 setSettings({
                   ...settings,
-                  new_initiatives: !settings.new_initiatives,
+                  new_initiatives_notify: !settings.new_initiatives_notify,
                 })
               }
             />
@@ -80,11 +83,11 @@ export const NotificationSettings = ({
           <div className="flex items-center space-x-2">
             <Checkbox
               id="followed-initiatives"
-              checked={settings.followed_initiatives}
+              checked={settings.followed_initiatives_notify}
               onCheckedChange={() =>
                 setSettings({
                   ...settings,
-                  followed_initiatives: !settings.followed_initiatives,
+                  followed_initiatives_notify: !settings.followed_initiatives_notify,
                 })
               }
             />

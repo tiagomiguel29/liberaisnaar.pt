@@ -398,8 +398,8 @@ export type Database = {
             foreignKeyName: "followed_initiatives_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "user_preferences"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -631,35 +631,6 @@ export type Database = {
           },
         ]
       }
-      notification_settings: {
-        Row: {
-          followed_initiatives: boolean
-          id: number
-          new_initiatives: boolean
-          user_id: string
-        }
-        Insert: {
-          followed_initiatives?: boolean
-          id?: number
-          new_initiatives?: boolean
-          user_id: string
-        }
-        Update: {
-          followed_initiatives?: boolean
-          id?: number
-          new_initiatives?: boolean
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "notifications_settings_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       parties: {
         Row: {
           acronym: string
@@ -863,6 +834,64 @@ export type Database = {
             columns: ["interventionId"]
             isOneToOne: false
             referencedRelation: "interventions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_preferences: {
+        Row: {
+          followed_initiatives_notify: boolean
+          id: number
+          new_initiatives_notify: boolean
+          user_id: string
+        }
+        Insert: {
+          followed_initiatives_notify?: boolean
+          id?: number
+          new_initiatives_notify?: boolean
+          user_id: string
+        }
+        Update: {
+          followed_initiatives_notify?: boolean
+          id?: number
+          new_initiatives_notify?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      user_profiles: {
+        Row: {
+          email: string
+          id: number
+          name: string
+          user_id: string
+        }
+        Insert: {
+          email: string
+          id?: number
+          name: string
+          user_id: string
+        }
+        Update: {
+          email?: string
+          id?: number
+          name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
