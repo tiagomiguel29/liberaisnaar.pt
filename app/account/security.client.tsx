@@ -163,7 +163,7 @@ const Setup2FA = ({
     close();
   };
 
-  const onEnableClicked = () => {
+  const onEnableClicked = (code=verifyCode) => {
     setLoading(true);
 
     setError("");
@@ -179,7 +179,7 @@ const Setup2FA = ({
       const verify = await supabase.auth.mfa.verify({
         factorId,
         challengeId,
-        code: verifyCode,
+        code,
       });
       if (verify.error) {
         setError(verify.error.message);
@@ -213,6 +213,14 @@ const Setup2FA = ({
     })();
   }, [open]);
 
+  function handleOTPChange(value: string) {
+    setVerifyCode(value);
+
+    if (value.length === 6) {
+      onEnableClicked(value);
+    }
+  }
+
   return (
     <Dialog open={open}>
       <DialogContent>
@@ -228,7 +236,7 @@ const Setup2FA = ({
             {qr && <img src={qr} />}
           </div>
           <div className="flex flex-row justify-center items-center my-4">
-            <InputOTP maxLength={6} value={verifyCode} onChange={setVerifyCode}>
+            <InputOTP maxLength={6} value={verifyCode} onChange={handleOTPChange}>
               <InputOTPGroup>
                 <InputOTPSlot index={0} />
                 <InputOTPSlot index={1} />
@@ -250,7 +258,7 @@ const Setup2FA = ({
             </Button>
             <Button 
             variant="default" 
-            onClick={onEnableClicked}
+            onClick={() => onEnableClicked()}
             disabled={loading}
             >
               {loading ? <Spinner /> : "Ativar 2FA"}
