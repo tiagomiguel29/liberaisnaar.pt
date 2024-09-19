@@ -1,6 +1,7 @@
 "use client";
 
 import { FormMessage, Message } from "@/components/form-message";
+import { Spinner } from "@/components/spinner";
 import { SubmitButton } from "@/components/submit-button";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,12 +24,14 @@ import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Login({ searchParams }: { searchParams: Message }) {
   const router = useRouter();
   const supabase = createClient();
   const [user, setUser] = useState<any>(null); // TODO: Replace `any` with user type
   const [loading, setLoading] = useState(true);
+  const [loginLoading, setLoginLoading] = useState(false);
   const [readyToShow, setReadyToShow] = useState(false);
   const [showMFAScreen, setShowMFAScreen] = useState(false);
   const [verifyCode, setVerifyCode] = useState("");
@@ -47,7 +50,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
   }, [supabase]);
 
   if (loading) {
-    return <div>Loading...</div>; // You can customize the loading state
+    return <Spinner />;
   }
 
   if (user) {
@@ -56,6 +59,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
   }
 
   const signInAction = async (event: any) => {
+    setLoginLoading(true);
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
@@ -67,9 +71,9 @@ export default function Login({ searchParams }: { searchParams: Message }) {
     if (error) {
       // TODO: Handle sign-in error
       console.error(error);
+      setLoginLoading(false);
     } else {
       getMFAStatus();
-      //window.location.href = "/account"; // Redirect after successful sign-in
     }
   };
 
@@ -78,20 +82,24 @@ export default function Login({ searchParams }: { searchParams: Message }) {
       const { data, error } =
         await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
       if (error) {
-        throw error;
+        toast.error("Ocorreu um erro. Por favor tenta novamente.");
+        return;
       }
 
+      setLoginLoading(false);
       if (data.nextLevel === "aal2" && data.nextLevel !== data.currentLevel) {
         setShowMFAScreen(true);
       } else {
-        router.push("/account");
+        window.location.href = "/account";
       }
     } finally {
       setReadyToShow(true);
     }
+    setLoginLoading(false);
   };
 
-  const on2FASubmitClicked = () => {
+  const on2FASubmitClicked = (code = verifyCode) => {
+    setLoginLoading(true);
     setError("");
     (async () => {
       const factors = await supabase.auth.mfa.listFactors();
@@ -102,7 +110,9 @@ export default function Login({ searchParams }: { searchParams: Message }) {
       const totpFactor = factors.data.totp[0];
 
       if (!totpFactor) {
-        throw new Error("No TOTP factors found!");
+        toast.error("Ocorreu um erro. Por favor tenta novamente.");
+        setLoginLoading(false);
+        return;
       }
 
       const factorId = totpFactor.id;
@@ -110,24 +120,38 @@ export default function Login({ searchParams }: { searchParams: Message }) {
       const challenge = await supabase.auth.mfa.challenge({ factorId });
       if (challenge.error) {
         setError(challenge.error.message);
-        throw challenge.error;
+        toast.error("Ocorreu um erro. Por favor tenta novamente.");
+        setLoginLoading(false);
+        return;
       }
 
       const challengeId = challenge.data.id;
 
+      console.log(code);
       const verify = await supabase.auth.mfa.verify({
         factorId,
         challengeId,
-        code: verifyCode,
+        code,
       });
       if (verify.error) {
         setError(verify.error.message);
-        throw verify.error;
+        toast.error("Código inválido.");
+        setLoginLoading(false);
+        setVerifyCode("");
+        return;
       }
-
-      router.push("/account");
+      window.location.href = "/account";
     })();
   };
+
+  function handleOTPChange(value: string) {
+    setVerifyCode(value);
+
+    console.log(value);
+    if (value.length === 6) {
+      on2FASubmitClicked(value);
+    }
+  }
 
   return (
     <>
@@ -168,7 +192,9 @@ export default function Login({ searchParams }: { searchParams: Message }) {
                   placeholder="password"
                   required
                 />
-                <Button type="submit">Sign in</Button>
+                <Button type="submit" disabled={loginLoading}>
+                  {loginLoading ? <Spinner /> : "Login"}
+                </Button>
                 <FormMessage message={searchParams} />
               </div>
             </CardContent>
@@ -189,7 +215,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
                 <InputOTP
                   maxLength={6}
                   value={verifyCode}
-                  onChange={setVerifyCode}
+                  onChange={handleOTPChange}
                 >
                   <InputOTPGroup>
                     <InputOTPSlot index={0} />
@@ -208,7 +234,9 @@ export default function Login({ searchParams }: { searchParams: Message }) {
           </CardContent>
           <CardFooter>
             <div className="w-full flex justify-center items-center">
-              <Button onClick={on2FASubmitClicked}>Login</Button>
+              <Button onClick={() => on2FASubmitClicked()} disabled={loginLoading || verifyCode.length !== 6}>
+                {loginLoading ? <Spinner /> : "Verificar"}
+              </Button>
             </div>
           </CardFooter>
         </Card>
