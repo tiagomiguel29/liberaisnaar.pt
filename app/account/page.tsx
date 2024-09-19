@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { NotificationSettings } from "./notifications.client";
 import { Tables } from "@/types/database.types";
+import { SecuritySettings } from "./security.client";
 
 type UserPreferences = Tables<"user_preferences">;
 
@@ -95,42 +95,7 @@ export default async function ProtectedPage() {
                   <Button>Guardar</Button>
                 </CardFooter>
               </Card>
-              <Card id="security">
-                <CardHeader>
-                  <CardTitle>Segurança</CardTitle>
-                  <CardDescription>
-                    Atualiza a segurança da tua conta
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-6">
-                    <div className="grid gap-2">
-                      <Label htmlFor="current-password">Password Atual</Label>
-                      <Input id="current-password" type="password" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="new-password">Nova Password</Label>
-                      <Input id="new-password" type="password" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="confirm-password">Confirmar Password</Label>
-                      <Input id="confirm-password" type="password" />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox id="two-factor" />
-                      <label
-                        htmlFor="two-factor"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Ativar 2FA
-                      </label>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="border-t p-6">
-                  <Button>Atualizar Segurança</Button>
-                </CardFooter>
-              </Card>
+              <SecuritySettings />
               <NotificationSettings notificationSettings={notificationsSettings} />
             </div>
           </div>
