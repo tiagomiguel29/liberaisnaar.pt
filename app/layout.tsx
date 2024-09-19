@@ -1,7 +1,12 @@
 import { EnvVarWarning } from "@/components/env-var-warning";
 import HeaderAuth from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Sheet, SheetTrigger, SheetContent, SheetClose } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetClose,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { GeistSans } from "geist/font/sans";
@@ -83,7 +88,7 @@ export default function RootLayout({
                       <span>Liberais na AR</span>
                     </Link>
                     {navItems.map((item) => (
-                     <NavLink name={item.name} href={item.href} />
+                      <NavLink name={item.name} href={item.href} />
                     ))}
                     {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
                   </div>
@@ -91,27 +96,42 @@ export default function RootLayout({
               </Sheet>
             </header>
 
-            <div className="w-full flex flex-col items-center">
-              {children}
-            </div>
+            <div className="w-full flex flex-col items-center">{children}</div>
 
             <footer className="w-full flex flex-col items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
-              <div className="flex items-center justify-center gap-8">
-              <p>
-                Desenvolvido por{" "}
-                <a
-                  href="https://github.com/tiagomiguel29"
-                  target="_blank"
+              <div>
+                <Link
                   className="font-bold hover:underline"
-                  rel="noreferrer"
+                  href={process.env.NEXT_PUBLIC_STATUS_URL!}
+                  target="_blank"
+                  prefetch={false}
                 >
-                  Tiago Oliveira
-                </a>
-              </p>
-              <ThemeSwitcher />
+                  Status
+                </Link>
+              </div>
+              <div className="flex items-center justify-center gap-8">
+                <p>
+                  Desenvolvido por{" "}
+                  <a
+                    href="https://github.com/tiagomiguel29"
+                    target="_blank"
+                    className="font-bold hover:underline"
+                    rel="noreferrer"
+                  >
+                    Tiago Oliveira
+                  </a>
+                </p>
+                <ThemeSwitcher />
               </div>
               <div>
-                  Dados obtidos através do <a href="https://www.parlamento.pt/Cidadania/Paginas/DadosAbertos.aspx" target="_blank" className="font-bold hover:underline">Portal de Dados Abertos do Parlamento</a>
+                Dados obtidos através do{" "}
+                <a
+                  href="https://www.parlamento.pt/Cidadania/Paginas/DadosAbertos.aspx"
+                  target="_blank"
+                  className="font-bold hover:underline"
+                >
+                  Portal de Dados Abertos do Parlamento
+                </a>
               </div>
             </footer>
           </main>
