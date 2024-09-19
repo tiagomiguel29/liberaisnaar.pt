@@ -1,4 +1,5 @@
 "use client";
+import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,8 +28,11 @@ export const NotificationSettings = ({
   const [settings, setSettings] =
     useState<UserPreferences>(notificationSettings);
 
+  const [loading, setLoading] = useState(false);
+
   async function saveSettingsReq() {
     return new Promise(async (resolve, reject) => {
+      setLoading(true);
       const { error } = await supabase
         .from("user_preferences")
         .update({
@@ -43,6 +47,7 @@ export const NotificationSettings = ({
       } else {
         resolve(true);
       }
+      setLoading(false);
     });
   }
 
@@ -87,7 +92,8 @@ export const NotificationSettings = ({
               onCheckedChange={() =>
                 setSettings({
                   ...settings,
-                  followed_initiatives_notify: !settings.followed_initiatives_notify,
+                  followed_initiatives_notify:
+                    !settings.followed_initiatives_notify,
                 })
               }
             />
@@ -101,7 +107,9 @@ export const NotificationSettings = ({
         </div>
       </CardContent>
       <CardFooter className="border-t p-6">
-        <Button onClick={saveSettings}>Guardar</Button>
+        <Button onClick={saveSettings} disabled={loading}>
+          {loading ? <Spinner /> : "Guardar"}
+        </Button>
       </CardFooter>
     </Card>
   );
