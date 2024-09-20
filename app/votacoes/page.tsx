@@ -23,6 +23,7 @@ import { VoteResultBadge } from "@/components/vote-result-badge";
 import { ThumbsDownIcon, ThumbsUpIcon, VoteIcon } from "lucide-react";
 import Link from "next/link";
 import { ExtendedVote, InitiativeWithParties } from "@/types/extended.types";
+import { format } from "date-fns";
 
 
 export default async function Index({
@@ -79,7 +80,7 @@ export default async function Index({
                         <CardDescription><span className="underline">{v.event.phase}</span>{v.description && <span> - {v.description}</span>}</CardDescription>
                         <CardDescription>
                           <span className="text-muted-foreground">
-                            {new Date(v.event.phase_date).toLocaleDateString()}
+                            {format(new Date(v.event.phase_date), "dd/MM/yyyy")}
                           </span>
                         </CardDescription>
                       </div>
