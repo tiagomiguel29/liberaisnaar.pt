@@ -11,6 +11,7 @@ import {
 } from "@/types/extended.types";
 import supabase from "@/utils/supabase";
 import { createClient } from "@/utils/supabase/server";
+import { format } from "date-fns";
 import { FileIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -124,9 +125,8 @@ export default async function InitiativeDetailsPage({
                   <div className="grid gap-2">
                     <div className="font-bold">Data Submissão</div>
                     <div>
-                      {new Date(
-                        initiative.submission_date
-                      ).toLocaleDateString()}
+                      {format(new Date(
+                        initiative.submission_date), "dd/MM/yyyy")}
                     </div>
                   </div>
                   <div>

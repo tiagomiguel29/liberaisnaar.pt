@@ -21,6 +21,7 @@ import { VoteResultBadge } from "@/components/vote-result-badge";
 import { ExtendedInitiative, Follow } from "@/types/extended.types";
 import { createClient } from "@/utils/supabase/server";
 import { FollowButton } from "@/components/follow-button";
+import { format } from "date-fns";
 
 export default async function Index({
   searchParams,
@@ -108,7 +109,7 @@ export default async function Index({
                       <VoteResultBadge vote={i.firstVoteResult} />
                       <p className="text-muted-foreground text-sm mt-2">
                         Submetida em{" "}
-                        {new Date(i.submission_date).toLocaleDateString()}
+                        {format(new Date(i.submission_date), "dd/MM/yyyy")}
                       </p>
                     </div>
                     <PartyAuthors initiative={i} />

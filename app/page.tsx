@@ -16,6 +16,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { format } from "date-fns";
 
 
 export const revalidate = 120;
@@ -128,7 +129,7 @@ export default async function Index() {
                   <CardContent>
                     <p className="text-muted-foreground text-sm">
                       Submetida em{" "}
-                      {new Date(i.submission_date).toLocaleDateString()}
+                      {format(new Date(i.submission_date), "dd/MM/yyyy")}
                     </p>
                   </CardContent>
                   <CardFooter>
