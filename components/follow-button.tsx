@@ -3,7 +3,7 @@
 import { Follow } from "@/types/extended.types";
 import { Button } from "./ui/button";
 import { BookmarkIcon } from "lucide-react";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import toast from "react-hot-toast";
 import { resolve } from "path";
@@ -20,6 +20,25 @@ export const FollowButton = ({
   const [isFollowing, setIsFollowing] = useState(
     followed.some((f) => f.initiative_id === initiativeId)
   );
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const getSession = async () => {
+      const supabase = createClient();
+      const res = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (res.error) return;
+
+      setIsAuthenticated(res.data.currentLevel === res.data.nextLevel);
+      
+    }
+    getSession();
+  }
+  ,[]);
+
+  if (!isAuthenticated) {
+    return null;
+  }
+
 
   const followReq = async () => {
     return new Promise(async (resolve, reject) => {
