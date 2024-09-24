@@ -3,6 +3,7 @@
 import { FormMessage, Message } from "@/components/form-message";
 import { Spinner } from "@/components/spinner";
 import { SubmitButton } from "@/components/submit-button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,6 +22,9 @@ import {
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
+import { errors } from "@/utils/supabase/errors";
+import { set } from "date-fns";
+import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -32,6 +36,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
   const [user, setUser] = useState<any>(null); // TODO: Replace `any` with user type
   const [loading, setLoading] = useState(true);
   const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
   const [readyToShow, setReadyToShow] = useState(false);
   const [showMFAScreen, setShowMFAScreen] = useState(false);
   const [verifyCode, setVerifyCode] = useState("");
@@ -69,9 +74,12 @@ export default function Login({ searchParams }: { searchParams: Message }) {
     });
 
     if (error) {
-      // TODO: Handle sign-in error
-      console.error(error);
       setLoginLoading(false);
+      if (error.code) {
+        setLoginError(errors[error.code] || "Ocorreu um erro. Por favor tenta novamente.");
+      } else {
+        setLoginError("Ocorreu um erro. Por favor tenta novamente.");
+      }
     } else {
       getMFAStatus();
     }
@@ -82,9 +90,11 @@ export default function Login({ searchParams }: { searchParams: Message }) {
       const { data, error } =
         await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
       if (error) {
-        toast.error("Ocorreu um erro. Por favor tenta novamente.");
+        setLoginError("Ocorreu um erro. Por favor tenta novamente.");
         return;
       }
+
+      setLoginError("");
 
       setLoginLoading(false);
       if (data.nextLevel === "aal2" && data.nextLevel !== data.currentLevel) {
@@ -175,6 +185,16 @@ export default function Login({ searchParams }: { searchParams: Message }) {
             </CardHeader>
             <CardContent>
               <div className="min-w-64 flex flex-col gap-2 [&>input]:mb-3">
+                {loginError && (
+                  <div className="mb-2">
+                  <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Erro</AlertTitle>
+                  <AlertDescription>{loginError}</AlertDescription>
+                </Alert>
+                </div>
+                )
+                  }
                 <Label htmlFor="email">Email</Label>
                 <Input name="email" placeholder="you@example.com" required />
                 <div className="flex justify-between items-center">
