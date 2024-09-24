@@ -1,6 +1,7 @@
 "use client";
 
 import { Spinner } from "@/components/spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,6 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { createClient } from "@/utils/supabase/client";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
+import { AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -43,13 +45,25 @@ type Enroll2FA = {
 };
 
 export const SecuritySettings = () => {
+  // 2FA
+
   const [active2FA, setActive2FA] = useState(false);
 
   const [dialog2FAOpen, setDialog2FAOpen] = useState(false);
 
-  const supabase = createClient();
-
   const [currentFactorId, setCurrentFactorId] = useState<string | null>(null);
+
+  // Password change
+
+  const [newPassword, setNewPassword] = useState("");
+
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+
+  const [passwordChangeError, setPasswordChangeError] = useState("");
+
+  const [updatingPassword, setUpdatingPassword] = useState(false);
+
+  const supabase = createClient();
 
   useEffect(() => {
     // Check if 2FA is enabled
@@ -90,6 +104,30 @@ export const SecuritySettings = () => {
     setDialog2FAOpen(true);
   }
 
+  async function handleChangePassword() {
+    setUpdatingPassword(true);
+    if (newPassword !== newPasswordConfirm) {
+      setPasswordChangeError("As passwords não coincidem.");
+      setUpdatingPassword(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      setPasswordChangeError("Ocorreu um erro ao atualizar a password.");
+      setUpdatingPassword(false);
+      return;
+    }
+
+    toast.success("Password atualizada com sucesso!");
+    setNewPassword("");
+    setNewPasswordConfirm("");
+    setUpdatingPassword(false);
+  }
+
   return (
     <>
       <Card id="security">
@@ -99,17 +137,30 @@ export const SecuritySettings = () => {
         </CardHeader>
         <CardContent>
           <div className="grid gap-6">
-            <div className="grid gap-2">
-              <Label htmlFor="current-password">Password Atual</Label>
-              <Input id="current-password" type="password" />
-            </div>
+            {passwordChangeError && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Erro</AlertTitle>
+                <AlertDescription>{passwordChangeError}</AlertDescription>
+              </Alert>
+            )}
             <div className="grid gap-2">
               <Label htmlFor="new-password">Nova Password</Label>
-              <Input id="new-password" type="password" />
+              <Input
+                id="new-password"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="confirm-password">Confirmar Password</Label>
-              <Input id="confirm-password" type="password" />
+              <Input
+                id="confirm-password"
+                type="password"
+                value={newPasswordConfirm}
+                onChange={(e) => setNewPasswordConfirm(e.target.value)}
+              />
             </div>
             <div className="flex items-center space-x-2">
               <Switch
@@ -127,7 +178,9 @@ export const SecuritySettings = () => {
           </div>
         </CardContent>
         <CardFooter className="border-t p-6">
-          <Button>Atualizar Password</Button>
+          <Button onClick={handleChangePassword} disabled={updatingPassword}>
+            {updatingPassword ? <Spinner /> : "Atualizar Password"}
+          </Button>
         </CardFooter>
       </Card>
       <Setup2FA
@@ -163,7 +216,7 @@ const Setup2FA = ({
     close();
   };
 
-  const onEnableClicked = (code=verifyCode) => {
+  const onEnableClicked = (code = verifyCode) => {
     setLoading(true);
 
     setError("");
@@ -236,7 +289,11 @@ const Setup2FA = ({
             {qr && <img src={qr} />}
           </div>
           <div className="flex flex-row justify-center items-center my-4">
-            <InputOTP maxLength={6} value={verifyCode} onChange={handleOTPChange}>
+            <InputOTP
+              maxLength={6}
+              value={verifyCode}
+              onChange={handleOTPChange}
+            >
               <InputOTPGroup>
                 <InputOTPSlot index={0} />
                 <InputOTPSlot index={1} />
@@ -256,10 +313,10 @@ const Setup2FA = ({
             <Button variant="destructive" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button 
-            variant="default" 
-            onClick={() => onEnableClicked()}
-            disabled={loading}
+            <Button
+              variant="default"
+              onClick={() => onEnableClicked()}
+              disabled={loading}
             >
               {loading ? <Spinner /> : "Ativar 2FA"}
             </Button>
