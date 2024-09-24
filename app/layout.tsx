@@ -1,5 +1,5 @@
 import { EnvVarWarning } from "@/components/env-var-warning";
-import HeaderAuth from "@/components/header-auth";
+import {HeaderAuth, HeaderAuthMobile } from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import {
   Sheet,
@@ -8,7 +8,6 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
@@ -69,7 +68,7 @@ export default function RootLayout({
                     {item.name}
                   </Link>
                 ))}
-                {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+                <HeaderAuth />
               </nav>
               <Sheet>
                 <SheetTrigger asChild>
@@ -90,7 +89,7 @@ export default function RootLayout({
                     {navItems.map((item) => (
                       <NavLink name={item.name} href={item.href} />
                     ))}
-                    {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+                    <HeaderAuthMobile />
                   </div>
                 </SheetContent>
               </Sheet>
