@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { NotificationSettings } from "./notifications.client";
 import { Tables } from "@/types/database.types";
 import { SecuritySettings } from "./security.client";
+import { ProfileSettings } from "./profile.client";
 
 type UserPreferences = Tables<"user_preferences">;
 
@@ -63,38 +64,7 @@ export default async function ProtectedPage() {
               </Link>
             </nav>
             <div className="grid gap-6">
-              <Card id="profile">
-                <CardHeader>
-                  <CardTitle>Perfil</CardTitle>
-                  <CardDescription>
-                    Atualiza as tua informações
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-6">
-                    <div className="grid gap-2">
-                      <Label htmlFor="name">Nome</Label>
-                      <Input
-                        id="name"
-                        placeholder="Your name"
-                        defaultValue={user.user_metadata.name}
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="m@example.com"
-                        defaultValue={user.email}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="border-t p-6">
-                  <Button>Guardar</Button>
-                </CardFooter>
-              </Card>
+              <ProfileSettings user={user} />
               <SecuritySettings />
               <NotificationSettings notificationSettings={notificationsSettings} />
             </div>
