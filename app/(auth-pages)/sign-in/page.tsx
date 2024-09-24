@@ -40,7 +40,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
   const [readyToShow, setReadyToShow] = useState(false);
   const [showMFAScreen, setShowMFAScreen] = useState(false);
   const [verifyCode, setVerifyCode] = useState("");
-  const [error, setError] = useState("");
+  const [MFAError, setMFAError] = useState("");
 
   useEffect(() => {
     const checkUser = async () => {
@@ -76,7 +76,9 @@ export default function Login({ searchParams }: { searchParams: Message }) {
     if (error) {
       setLoginLoading(false);
       if (error.code) {
-        setLoginError(errors[error.code] || "Ocorreu um erro. Por favor tenta novamente.");
+        setLoginError(
+          errors[error.code] || "Ocorreu um erro. Por favor tenta novamente."
+        );
       } else {
         setLoginError("Ocorreu um erro. Por favor tenta novamente.");
       }
@@ -110,17 +112,19 @@ export default function Login({ searchParams }: { searchParams: Message }) {
 
   const on2FASubmitClicked = (code = verifyCode) => {
     setLoginLoading(true);
-    setError("");
+    setMFAError("");
     (async () => {
       const factors = await supabase.auth.mfa.listFactors();
       if (factors.error) {
-        throw factors.error;
+        setMFAError("Ocorreu um erro. Por favor tenta novamente.");
+        setLoginLoading(false);
+        return;
       }
 
       const totpFactor = factors.data.totp[0];
 
       if (!totpFactor) {
-        toast.error("Ocorreu um erro. Por favor tenta novamente.");
+        setMFAError("Ocorreu um erro. Por favor tenta novamente.");
         setLoginLoading(false);
         return;
       }
@@ -129,8 +133,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
 
       const challenge = await supabase.auth.mfa.challenge({ factorId });
       if (challenge.error) {
-        setError(challenge.error.message);
-        toast.error("Ocorreu um erro. Por favor tenta novamente.");
+        setMFAError("Ocorreu um erro. Por favor tenta novamente.");
         setLoginLoading(false);
         return;
       }
@@ -144,8 +147,14 @@ export default function Login({ searchParams }: { searchParams: Message }) {
         code,
       });
       if (verify.error) {
-        setError(verify.error.message);
-        toast.error("Código inválido.");
+        if (verify.error.code) {
+          setMFAError(
+            errors[verify.error.code] ||
+              "Ocorreu um erro. Por favor tenta novamente."
+          );
+        } else {
+          setMFAError("Ocorreu um erro. Por favor tenta novamente.");
+        }
         setLoginLoading(false);
         setVerifyCode("");
         return;
@@ -187,14 +196,13 @@ export default function Login({ searchParams }: { searchParams: Message }) {
               <div className="min-w-64 flex flex-col gap-2 [&>input]:mb-3">
                 {loginError && (
                   <div className="mb-2">
-                  <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Erro</AlertTitle>
-                  <AlertDescription>{loginError}</AlertDescription>
-                </Alert>
-                </div>
-                )
-                  }
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Erro</AlertTitle>
+                      <AlertDescription>{loginError}</AlertDescription>
+                    </Alert>
+                  </div>
+                )}
                 <Label htmlFor="email">Email</Label>
                 <Input name="email" placeholder="you@example.com" required />
                 <div className="flex justify-between items-center">
@@ -231,7 +239,16 @@ export default function Login({ searchParams }: { searchParams: Message }) {
           </CardHeader>
           <CardContent>
             <div className="min-w-64 flex flex-col gap-2 [&>input]:mb-3">
-              <div className="flex justify-between items-center">
+              {MFAError && (
+                <div className="mb-2">
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Erro</AlertTitle>
+                    <AlertDescription>{MFAError}</AlertDescription>
+                  </Alert>
+                </div>
+              )}
+              <div className="flex justify-center items-center">
                 <InputOTP
                   maxLength={6}
                   value={verifyCode}
@@ -254,7 +271,10 @@ export default function Login({ searchParams }: { searchParams: Message }) {
           </CardContent>
           <CardFooter>
             <div className="w-full flex justify-center items-center">
-              <Button onClick={() => on2FASubmitClicked()} disabled={loginLoading || verifyCode.length !== 6}>
+              <Button
+                onClick={() => on2FASubmitClicked()}
+                disabled={loginLoading || verifyCode.length !== 6}
+              >
                 {loginLoading ? <Spinner /> : "Verificar"}
               </Button>
             </div>
