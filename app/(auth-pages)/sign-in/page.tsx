@@ -23,15 +23,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 import { errors } from "@/utils/supabase/errors";
-import { set } from "date-fns";
 import { AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 
 export default function Login({ searchParams }: { searchParams: Message }) {
-  const router = useRouter();
   const supabase = createClient();
   const [user, setUser] = useState<any>(null); // TODO: Replace `any` with user type
   const [loading, setLoading] = useState(true);
