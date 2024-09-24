@@ -123,6 +123,7 @@ export const SecuritySettings = () => {
     }
 
     toast.success("Password atualizada com sucesso!");
+    setPasswordChangeError("");
     setNewPassword("");
     setNewPasswordConfirm("");
     setUpdatingPassword(false);
