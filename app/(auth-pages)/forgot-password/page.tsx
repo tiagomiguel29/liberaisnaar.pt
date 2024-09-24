@@ -35,7 +35,9 @@ export default async function ForgotPassword({
             <SubmitButton formAction={forgotPasswordAction}>
               Reset Password
             </SubmitButton>
-            <FormMessage message={searchParams} />
+            <div className="mt-2">
+              <FormMessage message={searchParams} />
+            </div>
           </div>
         </CardContent>
       </form>
