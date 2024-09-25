@@ -50,7 +50,7 @@ export default function RootLayout({
         >
           <Toaster position="top-right" />
           <main className="min-h-screen flex flex-col items-center">
-            <header className="bg-primary w-full text-white py-4 px-6 md:px-8 flex items-center justify-between">
+            <header className="bg-primary w-full text-white px-6 md:px-8 flex gap-x-2 items-center justify-between">
               <Link
                 href="/"
                 className="flex items-center gap-2"
@@ -64,7 +64,7 @@ export default function RootLayout({
                   className="py-2"
                 />
               </Link>
-              <nav className="hidden md:flex items-center gap-6">
+              <nav className="hidden md:flex py-4 items-center gap-6">
                 {navItems.map((item) => (
                   <Link
                     key={item.name}
