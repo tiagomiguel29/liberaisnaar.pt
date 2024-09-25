@@ -83,7 +83,7 @@ export const FollowButton = ({
     toast.promise(unfollowReq(), {
       loading: "A adicionar...",
       success: <b>Iniciative removida!</b>,
-      error: <b>Error ao remover iniciativa.</b>,
+      error: <b>Erro ao remover iniciativa.</b>,
     });
   };
 
@@ -91,7 +91,7 @@ export const FollowButton = ({
     toast.promise(followReq(), {
       loading: "A adicionar...",
       success: <b>Iniciativa adicionada!</b>,
-      error: <b>Error ao adicionar iniciativa.</b>,
+      error: <b>Erro ao adicionar iniciativa.</b>,
     });
   };
 
