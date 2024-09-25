@@ -31,7 +31,7 @@ const navItems = [
   { name: "Home", href: "/" },
   { name: "Iniciativas", href: "/iniciativas" },
   { name: "Votações", href: "/votacoes" },
-  { name: "Deputados", href: "/deputados" },
+  //{ name: "Deputados", href: "/deputados" },
 ];
 
 export default function RootLayout({
