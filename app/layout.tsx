@@ -79,7 +79,7 @@ export default function RootLayout({
               </nav>
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="md:hidden">
+                  <Button variant="secondary" size="icon" className="md:hidden">
                     <MenuIcon className="h-6 w-6" />
                     <span className="sr-only">Toggle navigation menu</span>
                   </Button>
