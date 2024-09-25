@@ -29,6 +29,7 @@ import { ExtendedInitiative, Follow } from "@/types/extended.types";
 import { FollowButton } from "@/components/follow-button";
 import { format } from "date-fns";
 import Link from "next/link";
+import { Paginator } from "@/components/pagination";
 
 export default function FollowingInitiativesPage() {
   const searchParams = useSearchParams();
@@ -99,7 +100,7 @@ export default function FollowingInitiativesPage() {
 
       setInitiatives(data);
       setCount(count ?? 0);
-      setTotalPages(Math.ceil(count ?? 0 / limit));
+      setTotalPages(Math.ceil((count ?? 0) / limit));
     };
 
     fetchInitiatives();
@@ -170,56 +171,14 @@ export default function FollowingInitiativesPage() {
               ))}
           </div>
           <div className="p-4">
-            <Pagination>
-              <PaginationContent className="flex flex-wrap">
-                {/* Previous button */}
-                {page > 1 && (
-                  <PaginationPrevious
-                    href={`/iniciativas?page=${page - 1}&limit=${limit}`}
-                    isActive={page > 1}
-                  >
-                    Anterior
-                  </PaginationPrevious>
-                )}
-                {/* Left Ellipsis (only show if page > 2) */}
-                {page > 2 && (
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                )}
-
-                {/* Page numbers logic */}
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter((n) => n === page || n === page - 1 || n === page + 1) // Only show current, previous, and next pages
-                  .map((n) => (
-                    <PaginationItem key={n}>
-                      <PaginationLink
-                        href={`/iniciativas?page=${n}&limit=${limit}`}
-                        isActive={n === page}
-                      >
-                        {n}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-
-                {/* Right Ellipsis (only show if more than 3 pages left) */}
-                {page < totalPages - 1 && (
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                )}
-
-                {/* Next button */}
-                {page < totalPages && (
-                  <PaginationNext
-                    href={`/iniciativas?page=${page + 1}&limit=${limit}`}
-                    isActive={page < totalPages}
-                  >
-                    Seguinte
-                  </PaginationNext>
-                )}
-              </PaginationContent>
-            </Pagination>
+            <Paginator
+              currentPage={page}
+              limit={limit}
+              totalPages={totalPages}
+              onPageChange={(page) => {
+                setPage(page);
+              }}
+            />
           </div>
         </div>
       </div>
