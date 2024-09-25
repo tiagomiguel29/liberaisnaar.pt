@@ -68,7 +68,7 @@ export default async function Signup({
               />
               <SubmitButton
                 formAction={signUpAction}
-                pendingText="Signing up..."
+                pendingText="A submeter..."
               >
                 Sign up
               </SubmitButton>

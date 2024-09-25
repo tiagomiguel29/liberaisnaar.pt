@@ -1,3 +1,5 @@
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+
 export type Message =
   | { success: string }
   | { error: string }
@@ -5,20 +7,26 @@ export type Message =
 
 export function FormMessage({ message }: { message: Message }) {
   return (
-    <div className="flex flex-col gap-2 w-full max-w-md text-sm">
+    <>
       {"success" in message && (
-        <div className="text-foreground border-l-2 border-foreground px-4">
-          {message.success}
-        </div>
+        <Alert>
+          <AlertTitle>Sucesso!</AlertTitle>
+          <AlertDescription>{message.success}</AlertDescription>
+        </Alert>
       )}
       {"error" in message && (
-        <div className="text-destructive-foreground border-l-2 border-destructive-foreground px-4">
-          {message.error}
-        </div>
+        <Alert variant="destructive">
+          <AlertTitle>Erro!</AlertTitle>
+          <AlertDescription>{message.error}</AlertDescription>
+        </Alert>
       )}
+
       {"message" in message && (
-        <div className="text-foreground border-l-2 px-4">{message.message}</div>
+        <Alert>
+          <AlertTitle>Atenção!</AlertTitle>
+          <AlertDescription>{message.message}</AlertDescription>
+        </Alert>
       )}
-    </div>
+  </>
   );
 }

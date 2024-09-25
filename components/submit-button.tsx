@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { type ComponentProps } from "react";
 import { useFormStatus } from "react-dom";
+import { Spinner } from "./spinner";
 
 type Props = ComponentProps<typeof Button> & {
   pendingText?: string;
@@ -17,7 +18,7 @@ export function SubmitButton({
 
   return (
     <Button type="submit" aria-disabled={pending} {...props}>
-      {pending ? pendingText : children}
+      {pending ? <Spinner/> : children}
     </Button>
   );
 }
