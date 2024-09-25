@@ -12,10 +12,12 @@ export const FollowButton = ({
   initiativeId,
   followed,
   userId,
+  onSuccessClick,
 }: {
   initiativeId: number;
   userId: string;
   followed: Follow[];
+  onSuccessClick?: () => void;
 }) => {
   const [isFollowing, setIsFollowing] = useState(
     followed.some((f) => f.initiative_id === initiativeId)
@@ -57,6 +59,7 @@ export const FollowButton = ({
       } else {
         setIsFollowing(true);
         resolve(true);
+        if (onSuccessClick) onSuccessClick();
       }
     });
   };
@@ -75,6 +78,7 @@ export const FollowButton = ({
       } else {
         setIsFollowing(false);
         resolve(true);
+        if (onSuccessClick) onSuccessClick();
       }
     });
   };
