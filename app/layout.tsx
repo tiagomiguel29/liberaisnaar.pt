@@ -84,15 +84,21 @@ export default function RootLayout({
                     <span className="sr-only">Toggle navigation menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left">
-                  <div className="grid gap-4 py-6">
-                    <Link
-                      href="/"
-                      className="flex items-center gap-2 text-lg font-semibold"
-                      prefetch={false}
-                    >
-                      <span>Liberais na AR</span>
-                    </Link>
+                <SheetContent side="left" className="p-0 border-none">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2 text-lg font-semibold bg-primary px-6 py-8"
+                    prefetch={false}
+                  >
+                    <Image
+                      src="/images/logo.png"
+                      alt="Liberais na AR"
+                      width={360}
+                      height={150}
+                      className="py-2"
+                    />
+                  </Link>
+                  <div className="grid gap-4 p-6">
                     {navItems.map((item) => (
                       <NavLink name={item.name} href={item.href} />
                     ))}
