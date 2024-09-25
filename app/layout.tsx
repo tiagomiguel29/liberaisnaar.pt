@@ -1,5 +1,5 @@
 import { EnvVarWarning } from "@/components/env-var-warning";
-import {HeaderAuth, HeaderAuthMobile } from "@/components/header-auth";
+import { HeaderAuth, HeaderAuthMobile } from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import {
   Sheet,
@@ -14,6 +14,7 @@ import Link from "next/link";
 import "./globals.css";
 import { NavLink } from "@/components/navlink";
 import { Toaster } from "react-hot-toast";
+import Image from "next/image";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -55,7 +56,13 @@ export default function RootLayout({
                 className="flex items-center gap-2"
                 prefetch={false}
               >
-                <span className="text-lg font-semibold">Liberais na AR</span>
+                <Image
+                  src="/images/logo.png"
+                  alt="Liberais na AR"
+                  width={360}
+                  height={150}
+                  className="py-2"
+                />
               </Link>
               <nav className="hidden md:flex items-center gap-6">
                 {navItems.map((item) => (
