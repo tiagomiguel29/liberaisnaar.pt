@@ -16,16 +16,21 @@ import { MobileNavLink } from "@/components/mobile-navlink";
 import { Toaster } from "react-hot-toast";
 import Image from "next/image";
 import { NavLink } from "@/components/navlink";
+import { Metadata } from "next";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: "Liberais na AR",
   description:
     "Acompanha a atividade dos deputados liberais na Assembleia da República",
+  openGraph: {
+    siteName: "Liberais na AR",
+    url: defaultUrl,
+  }
 };
 
 const navItems = [
