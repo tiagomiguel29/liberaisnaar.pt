@@ -49,8 +49,6 @@ export default function FollowingInitiativesPage() {
 
   const supabase = createClient();
 
-  const partyAcronym = "IL";
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
@@ -85,7 +83,6 @@ export default function FollowingInitiativesPage() {
             count: "exact",
           }
         )
-        .eq("initiatives_party_authors.partyAcronym", partyAcronym)
         .order("submission_date", { ascending: true })
         .order("number", { ascending: true })
         .range((page - 1) * limit, page * limit - 1);
