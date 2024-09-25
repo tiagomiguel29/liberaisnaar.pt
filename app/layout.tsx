@@ -12,9 +12,10 @@ import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
-import { NavLink } from "@/components/navlink";
+import { MobileNavLink } from "@/components/mobile-navlink";
 import { Toaster } from "react-hot-toast";
 import Image from "next/image";
+import { NavLink } from "@/components/navlink";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -66,14 +67,7 @@ export default function RootLayout({
               </Link>
               <nav className="hidden md:flex py-4 items-center gap-6">
                 {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="text-sm font-medium hover:text-gray-300 transition-colors"
-                    prefetch={false}
-                  >
-                    {item.name}
-                  </Link>
+                  <NavLink name={item.name} href={item.href} />
                 ))}
                 <HeaderAuth />
               </nav>
@@ -100,7 +94,7 @@ export default function RootLayout({
                   </Link>
                   <div className="grid gap-4 p-6">
                     {navItems.map((item) => (
-                      <NavLink name={item.name} href={item.href} />
+                      <MobileNavLink name={item.name} href={item.href} />
                     ))}
                     <HeaderAuthMobile />
                   </div>

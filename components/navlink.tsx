@@ -1,17 +1,30 @@
+"use client";
+
 import Link from "next/link";
-import { SheetClose } from "./ui/sheet";
+import { usePathname } from "next/navigation";
+
+const defaultClasses = "text-sm font-medium hover:text-gray-300 transition-colors";
+const activeClasses = "bg-white text-primary px-3 py-2 rounded-md";
+
 
 export const NavLink = ({ name, href }: { name: string; href: string }) => {
-  return (
-    <SheetClose asChild>
+  const pathname = usePathname();
+  const active =
+    pathname === href || (href !== '/' && pathname.startsWith(href));
+
+ 
+    return (
       <Link
         key={name}
         href={href}
-        className="text-lg font-medium hover:text-gray-300 transition-colors"
+        className={`${defaultClasses} ${active ? activeClasses : ""}`}
         prefetch={false}
       >
         {name}
       </Link>
-    </SheetClose>
-  );
+    );
+  
+
+
+  
 };
