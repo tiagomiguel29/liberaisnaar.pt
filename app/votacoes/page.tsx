@@ -25,7 +25,6 @@ import Link from "next/link";
 import { ExtendedVote, InitiativeWithParties } from "@/types/extended.types";
 import { format } from "date-fns";
 
-
 export default async function Index({
   searchParams,
 }: {
@@ -62,22 +61,31 @@ export default async function Index({
       <main className="flex-1 w-full md:w-3/4 lg:w-2/3 xl:w-2/3 flex flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
         <div className="container mx-auto grid gap-8 md:gap-12">
           <div>
-            <h2 className="text-2xl font-bold mb-4">Votações</h2>
+            <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between py-6 gap-y-4">
+              <h2 className="text-2xl font-bold">Votações</h2>
+            </div>
             <div className="grid gap-4 md:gap-6 md:grid-cols-1">
               {votes.map((v) => (
                 <Card>
                   <CardHeader>
                     <div className="flex flex-col md:flex-row md:justify-between">
                       <div>
-                        <CardTitle className="mb-1">{v.event.initiative.title}</CardTitle>
-                        <CardDescription>{v.event.initiative.type_description +
-                      " " +
-                      v.event.initiative.number +
-                      "/" +
-                      v.event.initiative.legislature +
-                      "/" +
-                      v.event.initiative.legislative_session}</CardDescription>
-                        <CardDescription><span className="underline">{v.event.phase}</span>{v.description && <span> - {v.description}</span>}</CardDescription>
+                        <CardTitle className="mb-1">
+                          {v.event.initiative.title}
+                        </CardTitle>
+                        <CardDescription>
+                          {v.event.initiative.type_description +
+                            " " +
+                            v.event.initiative.number +
+                            "/" +
+                            v.event.initiative.legislature +
+                            "/" +
+                            v.event.initiative.legislative_session}
+                        </CardDescription>
+                        <CardDescription>
+                          <span className="underline">{v.event.phase}</span>
+                          {v.description && <span> - {v.description}</span>}
+                        </CardDescription>
                         <CardDescription>
                           <span className="text-muted-foreground">
                             {format(new Date(v.event.phase_date), "dd/MM/yyyy")}
@@ -198,7 +206,11 @@ const ILVote = async ({ vote }: { vote: ExtendedVote }) => {
   );
 };
 
-const PartyAuthors = ({ initiative }: { initiative:  InitiativeWithParties}) => {
+const PartyAuthors = ({
+  initiative,
+}: {
+  initiative: InitiativeWithParties;
+}) => {
   if (initiative.party_authors.length > 0) {
     return (
       <div>
