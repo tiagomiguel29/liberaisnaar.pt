@@ -63,7 +63,7 @@ export default function RootLayout({
                 className="flex items-center gap-2"
                 prefetch={false}
               >
-                <Image
+                <img
                   src="/images/logo.png"
                   alt="Liberais na AR"
                   width={360}
