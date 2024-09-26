@@ -92,7 +92,7 @@ export default async function Index({
         <div className="container mx-auto grid gap-8 md:gap-12">
           <div>
             <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between py-6 gap-y-4">
-              <h2 className="text-2xl font-bold">Iniciativas</h2>
+              <h1 className="text-2xl font-bold">Iniciativas</h1>
               {user && (
                 <Button asChild variant={"outline"}>
                   <Link
