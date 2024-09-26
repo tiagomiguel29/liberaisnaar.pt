@@ -275,8 +275,14 @@ const Setup2FA = ({
     }
   }
 
+  function onOpenChange() {
+    if (open) {
+      handleClose();
+    }
+  }
+
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Configurar 2FA</DialogTitle>
