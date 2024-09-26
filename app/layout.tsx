@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: "Liberais na AR",
   description:
-    "Acompanha a atividade dos deputados liberais na Assembleia da República",
+    "Acompanha a atividade dos deputados liberais na Assembleia da República. Recebe notificações de novas iniciativas e sobre atualizações de iniciativas que segues.",
   openGraph: {
     siteName: "Liberais na AR",
     url: defaultUrl,
