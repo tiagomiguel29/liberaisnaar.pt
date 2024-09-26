@@ -19,7 +19,11 @@ export default async function ForgotPassword({
   } = await supabase.auth.getUser();
 
   if (user) {
-    return redirect("/protected");
+    const mfaCheck = await supabase.rpc("check_mfa");
+
+    if (!mfaCheck.error && mfaCheck.data) {
+      return redirect("/account");
+    }
   }
 
   return (
