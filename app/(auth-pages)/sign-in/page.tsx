@@ -29,7 +29,7 @@ import { useEffect, useState } from "react";
 
 export default function Login({ searchParams }: { searchParams: Message }) {
   const supabase = createClient();
-  const [user, setUser] = useState<any>(null); // TODO: Replace `any` with user type
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false); // TODO: Replace `any` with user type
   const [loading, setLoading] = useState(true);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
@@ -43,7 +43,16 @@ export default function Login({ searchParams }: { searchParams: Message }) {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      setUser(user);
+
+      const res = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (res.error) {
+        setLoading(false);
+        return;
+      }
+
+      if (user) {
+        setIsAuthenticated(res.data.currentLevel === res.data.nextLevel);
+      }
       setLoading(false);
     };
 
@@ -54,7 +63,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
     return <Spinner />;
   }
 
-  if (user) {
+  if (isAuthenticated) {
     window.location.href = "/account"; // Redirect to account page
     return null; // Prevent rendering the login form
   }

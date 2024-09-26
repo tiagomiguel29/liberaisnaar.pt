@@ -26,7 +26,11 @@ export default async function Signup({
   } = await supabase.auth.getUser();
 
   if (user) {
-    return redirect("/account");
+    const mfaCheck = await supabase.rpc("check_mfa");
+
+    if (!mfaCheck.error && mfaCheck.data) {
+      return redirect("/account");
+    }
   }
 
   if ("message" in searchParams) {
@@ -38,44 +42,41 @@ export default async function Signup({
   }
 
   return (
-      <Card>
-        <form className="flex flex-col mx-auto">
-          <CardHeader>
-            <CardTitle>Sign up</CardTitle>
-            <CardDescription>
-              Já tens conta?{" "}
-              <Link
-                className="text-primary font-medium underline"
-                href="/sign-in"
-              >
-                Sign in
-              </Link>
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex min-w-64 max-w-64 flex-col gap-2 [&>input]:mb-3">
-              <Label htmlFor="name">Nome</Label>
-              <Input name="name" placeholder="O teu nome" required />
-              <Label htmlFor="email">Email</Label>
-              <Input name="email" placeholder="you@example.com" required />
-              <Label htmlFor="password">Password</Label>
-              <Input
-                type="password"
-                name="password"
-                placeholder="password"
-                minLength={6}
-                required
-              />
-              <SubmitButton
-                formAction={signUpAction}
-                pendingText="A submeter..."
-              >
-                Sign up
-              </SubmitButton>
-              <FormMessage message={searchParams} />
-            </div>
-          </CardContent>
-        </form>
-      </Card>
+    <Card>
+      <form className="flex flex-col mx-auto">
+        <CardHeader>
+          <CardTitle>Sign up</CardTitle>
+          <CardDescription>
+            Já tens conta?{" "}
+            <Link
+              className="text-primary font-medium underline"
+              href="/sign-in"
+            >
+              Sign in
+            </Link>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex min-w-64 max-w-64 flex-col gap-2 [&>input]:mb-3">
+            <Label htmlFor="name">Nome</Label>
+            <Input name="name" placeholder="O teu nome" required />
+            <Label htmlFor="email">Email</Label>
+            <Input name="email" placeholder="you@example.com" required />
+            <Label htmlFor="password">Password</Label>
+            <Input
+              type="password"
+              name="password"
+              placeholder="password"
+              minLength={6}
+              required
+            />
+            <SubmitButton formAction={signUpAction} pendingText="A submeter...">
+              Sign up
+            </SubmitButton>
+            <FormMessage message={searchParams} />
+          </div>
+        </CardContent>
+      </form>
+    </Card>
   );
 }

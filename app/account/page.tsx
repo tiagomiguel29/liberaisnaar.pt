@@ -31,6 +31,16 @@ export default async function ProtectedPage() {
     return redirect("/sign-in");
   }
 
+  const mfaCheck = await supabase.rpc("check_mfa");
+
+  if (mfaCheck.error) {
+    return redirect("/sign-in");
+  }
+
+  if (!mfaCheck.data) {
+    return redirect("/sign-in");
+  }
+
   const { data, error } = await supabase.from("user_preferences").select("*").eq("user_id", user.id).single();
 
   if (error) {

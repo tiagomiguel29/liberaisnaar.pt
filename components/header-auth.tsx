@@ -3,27 +3,31 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { createClient } from "@/utils/supabase/server";
 import { SheetClose } from "./ui/sheet";
+import { redirect } from "next/navigation";
 
 export async function HeaderAuth() {
+  const supabase = createClient();
+
   const {
     data: { user },
-  } = await createClient().auth.getUser();
+  } = await supabase.auth.getUser();
 
-  return user ? (
+  const mfaCheck = await supabase.rpc("check_mfa");
+
+  let isAuthenticated = false;
+
+  if (!mfaCheck.error && mfaCheck.data) {
+    isAuthenticated = true;
+  }
+
+  return user && isAuthenticated ? (
     <div className="flex items-center gap-4">
-      <Button
-              asChild
-              size="sm"
-              variant={"secondary"}
-            >
-      <Link
-                  href="/account"
-                  className="flex items-center gap-x-2"
-                >
-                  <UserIcon className="h-4 w-4" />
-                  {user.user_metadata.name}
-                </Link>
-                </Button>
+      <Button asChild size="sm" variant={"secondary"}>
+        <Link href="/account" className="flex items-center gap-x-2">
+          <UserIcon className="h-4 w-4" />
+          {user.user_metadata.name}
+        </Link>
+      </Button>
       <form action={signOutAction}>
         <Button type="submit" size="sm" variant={"destructive"}>
           Sign out
@@ -42,31 +46,36 @@ export async function HeaderAuth() {
   );
 }
 
-export async function HeaderAuthMobile() {  
-  const { data: { user } } = await createClient().auth.getUser();
+export async function HeaderAuthMobile() {
+  const supabase = createClient();
 
-  return user ? (
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const mfaCheck = await supabase.rpc("check_mfa");
+
+  let isAuthenticated = false;
+
+  if (!mfaCheck.error && mfaCheck.data) {
+    isAuthenticated = true;
+  }
+
+  return user && isAuthenticated ? (
     <div className="flex items-center gap-4">
-      <Button
-        asChild
-        size="sm"
-        variant={"secondary"}
-      >
+      <Button asChild size="sm" variant={"secondary"}>
         <SheetClose asChild>
-        <Link
-          href="/account"
-          className="flex items-center gap-x-2"
-        >
-          <UserIcon className="h-4 w-4" />
-          {user.user_metadata.name}
-        </Link>
+          <Link href="/account" className="flex items-center gap-x-2">
+            <UserIcon className="h-4 w-4" />
+            {user.user_metadata.name}
+          </Link>
         </SheetClose>
       </Button>
       <form action={signOutAction}>
         <SheetClose asChild>
-        <Button type="submit" size="sm" variant={"destructive"}>
-          Sign out
-        </Button>
+          <Button type="submit" size="sm" variant={"destructive"}>
+            Sign out
+          </Button>
         </SheetClose>
       </form>
     </div>
@@ -74,12 +83,12 @@ export async function HeaderAuthMobile() {
     <div className="flex gap-2">
       <Button asChild size="sm" className="w-full" variant={"secondary"}>
         <SheetClose asChild>
-        <Link href="/sign-in">Sign in</Link>
+          <Link href="/sign-in">Sign in</Link>
         </SheetClose>
       </Button>
       <Button asChild size="sm" className="w-full" variant={"default"}>
         <SheetClose asChild>
-        <Link href="/sign-up">Sign up</Link>
+          <Link href="/sign-up">Sign up</Link>
         </SheetClose>
       </Button>
     </div>
@@ -103,5 +112,5 @@ function UserIcon(props: any) {
       <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
     </svg>
-  )
+  );
 }
