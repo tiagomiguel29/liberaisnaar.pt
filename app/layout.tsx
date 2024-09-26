@@ -1,4 +1,4 @@
-import { EnvVarWarning } from "@/components/env-var-warning";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { HeaderAuth, HeaderAuthMobile } from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import {
@@ -147,6 +147,7 @@ export default function RootLayout({
             </footer>
           </main>
         </ThemeProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
