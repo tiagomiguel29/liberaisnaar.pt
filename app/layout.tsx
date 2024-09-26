@@ -1,4 +1,5 @@
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 import { HeaderAuth, HeaderAuthMobile } from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import {
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     siteName: "Liberais na AR",
     url: defaultUrl,
-  }
+  },
 };
 
 const navItems = [
@@ -148,6 +149,7 @@ export default function RootLayout({
           </main>
         </ThemeProvider>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
