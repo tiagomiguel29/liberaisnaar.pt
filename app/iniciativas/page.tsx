@@ -124,7 +124,7 @@ export default async function Index({
                           )}
                         </div>
                         <CardDescription>
-                          <div className="flex flex-row gap-x-2">
+                          <div className="flex flex-col md:flex-row gap-x-2 gap-y-2">
                             <div>
                               <VoteResultBadge vote={i.firstVoteResult} />
                             </div>
