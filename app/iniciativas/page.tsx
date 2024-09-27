@@ -13,6 +13,7 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
+  CardDescription,
 } from "@/components/ui/card";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
@@ -109,28 +110,43 @@ export default async function Index({
             <div className="grid gap-4 md:gap-6 md:grid-cols-1">
               {initiatives.map((i) => (
                 <Card key={i.id}>
-                  <CardHeader className="pb-2">
-                    <div className="flex justify-between">
-                      <CardTitle className="text-lg font-bold">
-                        {i.title}
-                      </CardTitle>
-                      {user && (
-                        <FollowButton
-                          initiativeId={i.id}
-                          userId={user?.id}
-                          followed={followedInitiatives}
-                        />
-                      )}
+                  <CardHeader>
+                    <div className="flex flex-col md:flex-row md:justify-between">
+                      <div>
+                        <div className="flex justify-between items-start">
+                          <CardTitle className="mb-1">{i.title}</CardTitle>
+                          {user && (
+                            <FollowButton
+                              initiativeId={i.id}
+                              userId={user?.id}
+                              followed={followedInitiatives}
+                            />
+                          )}
+                        </div>
+                        <CardDescription>
+                          <div className="flex flex-row gap-x-2">
+                            <div>
+                              <VoteResultBadge vote={i.firstVoteResult} />
+                            </div>
+                            <div>
+                              {i.type_description +
+                                " " +
+                                i.number +
+                                "/" +
+                                i.legislature +
+                                "/" +
+                                i.legislative_session}
+                            </div>
+                          </div>
+                        </CardDescription>
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div>
-                      <VoteResultBadge vote={i.firstVoteResult} />
-                      <p className="text-muted-foreground text-sm mt-2">
-                        Submetida em{" "}
-                        {format(new Date(i.submission_date), "dd/MM/yyyy")}
-                      </p>
-                    </div>
+                    <p className="text-muted-foreground text-sm mt-2">
+                      Submetida em{" "}
+                      {format(new Date(i.submission_date), "dd/MM/yyyy")}
+                    </p>
                     <PartyAuthors initiative={i} />
                   </CardContent>
                   <CardFooter>
