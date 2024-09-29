@@ -1,13 +1,4 @@
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
   Card,
   CardHeader,
   CardTitle,
@@ -124,10 +115,7 @@ export default async function Index({
                           )}
                         </div>
                         <CardDescription>
-                          <div className="flex flex-col md:flex-row gap-x-2 gap-y-2">
-                            <div>
-                              <VoteResultBadge vote={i.firstVoteResult} />
-                            </div>
+                          <div className="flex flex-col md:flex-row gap-x-2 gap-y-2 underline">
                             <div>
                               {i.type_description +
                                 " " +
@@ -139,18 +127,17 @@ export default async function Index({
                             </div>
                           </div>
                         </CardDescription>
+                        <CardDescription>
+                          {format(new Date(i.submission_date), "dd/MM/yyyy")}
+                        </CardDescription>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground text-sm mt-2">
-                      Submetida em{" "}
-                      {format(new Date(i.submission_date), "dd/MM/yyyy")}
-                    </p>
                     <PartyAuthors initiative={i} />
                   </CardContent>
                   <CardFooter>
-                    <div className="flex flex-row-reverse w-full">
+                    <div className="flex flex-col md:flex-row-reverse md:justify-between justify-start items-start gap-y-2 md:items-center w-full">
                       <Link
                         href={`/iniciativas/${i.id}`}
                         className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
@@ -158,6 +145,8 @@ export default async function Index({
                       >
                         Consultar Iniciativa
                       </Link>
+
+                      <VoteResultBadge vote={i.firstVoteResult} />
                     </div>
                   </CardFooter>
                 </Card>
