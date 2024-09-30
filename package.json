@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@next/third-parties": "^14.2.13",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -25,7 +26,7 @@
     "geist": "^1.2.1",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.436.0",
-    "next": "latest",
+    "next": "^14.2.13",
     "next-themes": "^0.3.0",
     "prettier": "^3.3.3",
     "react": "18.2.0",

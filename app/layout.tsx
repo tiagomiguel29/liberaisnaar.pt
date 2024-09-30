@@ -18,6 +18,7 @@ import { Toaster } from "react-hot-toast";
 import Image from "next/image";
 import { NavLink } from "@/components/navlink";
 import { Metadata } from "next";
+import { GoogleTagManager } from '@next/third-parties/google'
 
 const defaultUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
@@ -48,6 +49,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={GeistSans.className} suppressHydrationWarning>
+      <GoogleTagManager gtmId="GTM-T7C34HFP" />
       <body className="bg-muted/40 text-foreground">
         <ThemeProvider
           attribute="class"
