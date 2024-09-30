@@ -25,6 +25,12 @@ import { format } from "date-fns";
 import { BookmarkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Paginator } from "@/components/pagination";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Liberais na AR | Iniciativas",
+};
 
 export default async function Index({
   searchParams,

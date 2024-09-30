@@ -1,24 +1,17 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { NotificationSettings } from "./notifications.client";
 import { Tables } from "@/types/database.types";
 import { SecuritySettings } from "./security.client";
 import { ProfileSettings } from "./profile.client";
+import { Metadata } from "next";
 
 type UserPreferences = Tables<"user_preferences">;
 
+export const metadata: Metadata = {
+  title: "Liberais na AR | Definições de conta",
+};
 
 export default async function ProtectedPage() {
   const supabase = createClient();

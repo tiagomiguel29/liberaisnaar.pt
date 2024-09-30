@@ -24,6 +24,11 @@ import { ThumbsDownIcon, ThumbsUpIcon, VoteIcon } from "lucide-react";
 import Link from "next/link";
 import { ExtendedVote, InitiativeWithParties } from "@/types/extended.types";
 import { format } from "date-fns";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Liberais na AR | Votações",
+};
 
 export default async function Index({
   searchParams,
