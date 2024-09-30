@@ -16,6 +16,25 @@ import { FileIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+export async function generateMetadata( { params }: { params: { id: string } }) {
+
+  const { data, error } = await supabase
+    .from("initiatives")
+    .select("title")
+    .eq("id", params.id)
+    .single();
+
+  if (error) {
+    return {
+      title: "Liberais Na AR",
+    };
+  }
+
+  return {
+    title: data.title,
+  };
+}
+
 export default async function InitiativeDetailsPage({
   params,
 }: {
@@ -125,14 +144,21 @@ export default async function InitiativeDetailsPage({
                   <div className="grid gap-2">
                     <div className="font-bold">Data Submissão</div>
                     <div>
-                      {format(new Date(
-                        initiative.submission_date), "dd/MM/yyyy")}
+                      {format(
+                        new Date(initiative.submission_date),
+                        "dd/MM/yyyy"
+                      )}
                     </div>
                   </div>
                   <div>
                     <Button asChild size="sm" variant="default">
-                      <Link href={initiative.text_link!} target="_blank" className="flex items-center gap-x-2">Ver Texto
-                      <FileIcon className="w-4 h-4" />
+                      <Link
+                        href={initiative.text_link!}
+                        target="_blank"
+                        className="flex items-center gap-x-2"
+                      >
+                        Ver Texto
+                        <FileIcon className="w-4 h-4" />
                       </Link>
                     </Button>
                   </div>
