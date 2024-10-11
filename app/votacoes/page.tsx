@@ -50,6 +50,7 @@ export default async function Index({
         `,
       { count: "exact" }
     )
+    .order("date", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
 
   const totalPages = votesRes.count ?? 0;
