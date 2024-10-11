@@ -32,6 +32,7 @@ import Link from "next/link";
 import { Paginator } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
+import { NoInitiativesFound } from "@/components/not-found-initiatives";
 
 export default function FollowingInitiativesPage() {
   const searchParams = useSearchParams();
@@ -140,6 +141,9 @@ export default function FollowingInitiativesPage() {
               <div className="flex justify-center items-center p-20">
                 <Spinner />
               </div>
+            )}
+            {!loading && initiatives.length === 0 && (
+            <NoInitiativesFound />  
             )}
             {!loading &&
               initiatives.map((i) => (

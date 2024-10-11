@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Paginator } from "@/components/pagination";
 import { Metadata } from "next";
 import { InitiativesFilters } from "./filters.client";
+import { NoInitiativesFound } from "@/components/not-found-initiatives";
 
 
 export const metadata: Metadata = {
@@ -129,6 +130,9 @@ export default async function Index({
             </div>
             <InitiativesFilters />
             <div className="grid gap-4 md:gap-6 md:grid-cols-1">
+              {initiatives.length === 0 && (
+                <NoInitiativesFound />
+              )}
               {initiatives.map((i) => (
                 <Card key={i.id}>
                   <CardHeader className="pb-2">
