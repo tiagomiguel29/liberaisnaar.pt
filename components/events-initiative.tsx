@@ -1,4 +1,5 @@
 import { EventWithVotes, VoteWithParties } from "@/types/extended.types";
+import { format } from "date-fns";
 
 export function EventsInitiative({ events }: { events: EventWithVotes[] }) {
   if (!events.length) return null;
@@ -13,7 +14,7 @@ export function EventsInitiative({ events }: { events: EventWithVotes[] }) {
           <div className="grid gap-1 text-sm relative">
             <div className="aspect-square w-3 bg-primary rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1" />
             <div className="font-medium">
-              {new Date(event.phase_date).toLocaleDateString()}
+              {format(new Date(event.phase_date), "dd/MM/yyyy")}
             </div>
             <div className="font-medium">{event.phase}</div>
             <div className="text-muted-foreground">ID: {event.oevId}</div>
