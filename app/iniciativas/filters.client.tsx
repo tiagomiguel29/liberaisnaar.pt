@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -45,11 +45,12 @@ const typeOtions = [
 
 export const InitiativesFilters = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [date, setDate] = useState<DateRange | undefined>({
-    from: undefined,
-    to: undefined,
+    from: searchParams.get("from") ? new Date(searchParams.get("from")!) : undefined,
+    to: searchParams.get("to") ? new Date(searchParams.get("to")!) : undefined,
   });
-  const [type, setType] = useState<string>("");
+  const [type, setType] = useState<string>(searchParams.get("type") || "all");
 
   const handleSubmit = () => {
     console.log("Filters applied:", { type, date });
