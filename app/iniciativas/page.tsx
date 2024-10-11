@@ -55,8 +55,7 @@ export default async function Index({
       }
     )
     .eq("initiatives_party_authors.partyAcronym", partyAcronym)
-    .order("submission_date", { ascending: true })
-    .order("number", { ascending: true })
+    .order("submission_date", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
 
   const { data, error, count } = await initiativesRes;
