@@ -30,6 +30,8 @@ import { FollowButton } from "@/components/follow-button";
 import { format } from "date-fns";
 import Link from "next/link";
 import { Paginator } from "@/components/pagination";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon } from "lucide-react";
 
 export default function FollowingInitiativesPage() {
   const searchParams = useSearchParams();
@@ -54,7 +56,6 @@ export default function FollowingInitiativesPage() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setSession(session);
-        
       }
 
       setAuthLoading(false);
@@ -92,7 +93,6 @@ export default function FollowingInitiativesPage() {
 
       setLoading(false);
 
-
       if (error) {
         console.error(error);
         return;
@@ -123,6 +123,17 @@ export default function FollowingInitiativesPage() {
     <main className="flex-1 w-full md:w-3/4 lg:w-2/3 xl:w-2/3 flex flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
       <div className="container mx-auto grid gap-8 md:gap-12">
         <div>
+          <div className="my-4">
+            <Button asChild variant={"outline"}>
+              <Link
+                href="/iniciativas"
+                className="flex justify-center items-center gap-x-2"
+              >
+                <ArrowLeftIcon />
+                Voltar
+              </Link>
+            </Button>
+          </div>
           <h1 className="text-2xl font-bold mb-4">Iniciativas Guardadas</h1>
           <div className="grid gap-4 md:gap-6 md:grid-cols-1">
             {loading && (
