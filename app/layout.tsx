@@ -18,8 +18,8 @@ import { Toaster } from "react-hot-toast";
 import Image from "next/image";
 import { NavLink } from "@/components/navlink";
 import { Metadata } from "next";
-import { GoogleTagManager } from '@next/third-parties/google'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import { GoogleTagManager } from "@next/third-parties/google";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { ThemeContextProvider } from "./ThemeContext";
 
 const defaultUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
@@ -53,50 +53,23 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className} suppressHydrationWarning>
       <GoogleTagManager gtmId="GTM-T7C34HFP" />
       <body className="bg-muted/40 text-foreground">
-      <AppRouterCacheProvider>
-      <ThemeContextProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Toaster position="top-right" />
-          <main className="min-h-screen flex flex-col items-center">
-            <header className="bg-primary w-full text-white px-6 md:px-8 flex gap-x-2 items-center justify-between">
-              <Link
-                href="/"
-                className="flex items-center gap-2"
-                prefetch={false}
-              >
-                <img
-                  src="/images/logo.png"
-                  alt="Liberais na AR"
-                  width={360}
-                  height={150}
-                  className="py-2"
-                />
-              </Link>
-              <nav className="hidden md:flex py-4 items-center gap-6">
-                {navItems.map((item) => (
-                  <NavLink name={item.name} href={item.href} />
-                ))}
-                <HeaderAuth />
-              </nav>
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="secondary" size="icon" className="md:hidden">
-                    <MenuIcon className="h-6 w-6" />
-                    <span className="sr-only">Toggle navigation menu</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left" className="p-0 border-none">
+        <AppRouterCacheProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ThemeContextProvider>
+              <Toaster position="top-right" />
+              <main className="min-h-screen flex flex-col items-center">
+                <header className="bg-primary w-full text-white px-6 md:px-8 flex gap-x-2 items-center justify-between">
                   <Link
                     href="/"
-                    className="flex items-center gap-2 text-lg font-semibold bg-primary px-6 py-8"
+                    className="flex items-center gap-2"
                     prefetch={false}
                   >
-                    <Image
+                    <img
                       src="/images/logo.png"
                       alt="Liberais na AR"
                       width={360}
@@ -104,59 +77,93 @@ export default function RootLayout({
                       className="py-2"
                     />
                   </Link>
-                  <div className="grid gap-4 p-6">
+                  <nav className="hidden md:flex py-4 items-center gap-6">
                     {navItems.map((item) => (
-                      <MobileNavLink name={item.name} href={item.href} />
+                      <NavLink name={item.name} href={item.href} />
                     ))}
-                    <HeaderAuthMobile />
+                    <HeaderAuth />
+                  </nav>
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button
+                        variant="secondary"
+                        size="icon"
+                        className="md:hidden"
+                      >
+                        <MenuIcon className="h-6 w-6" />
+                        <span className="sr-only">Toggle navigation menu</span>
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="p-0 border-none">
+                      <Link
+                        href="/"
+                        className="flex items-center gap-2 text-lg font-semibold bg-primary px-6 py-8"
+                        prefetch={false}
+                      >
+                        <Image
+                          src="/images/logo.png"
+                          alt="Liberais na AR"
+                          width={360}
+                          height={150}
+                          className="py-2"
+                        />
+                      </Link>
+                      <div className="grid gap-4 p-6">
+                        {navItems.map((item) => (
+                          <MobileNavLink name={item.name} href={item.href} />
+                        ))}
+                        <HeaderAuthMobile />
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                </header>
+
+                <div className="w-full flex flex-col items-center">
+                  {children}
+                </div>
+
+                <footer className="w-full flex flex-col items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
+                  <div>
+                    <Link
+                      className="font-bold hover:underline"
+                      href={process.env.NEXT_PUBLIC_STATUS_URL!}
+                      target="_blank"
+                      prefetch={false}
+                    >
+                      Status
+                    </Link>
                   </div>
-                </SheetContent>
-              </Sheet>
-            </header>
+                  <div className="flex items-center justify-center gap-8">
+                    <p>
+                      Desenvolvido por{" "}
+                      <a
+                        href="https://github.com/tiagomiguel29"
+                        target="_blank"
+                        className="font-bold hover:underline"
+                        rel="noreferrer"
+                      >
+                        Tiago Oliveira
+                      </a>
+                    </p>
+                    <ThemeSwitcher />
+                  </div>
+                  <div>
+                    Dados obtidos através do{" "}
+                    <a
+                      href="https://www.parlamento.pt/Cidadania/Paginas/DadosAbertos.aspx"
+                      target="_blank"
+                      className="font-bold hover:underline"
+                    >
+                      Portal de Dados Abertos do Parlamento
+                    </a>
+                  </div>
+                </footer>
+              </main>
+            </ThemeContextProvider>
+          </ThemeProvider>
 
-            <div className="w-full flex flex-col items-center">{children}</div>
-
-            <footer className="w-full flex flex-col items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
-              <div>
-                <Link
-                  className="font-bold hover:underline"
-                  href={process.env.NEXT_PUBLIC_STATUS_URL!}
-                  target="_blank"
-                  prefetch={false}
-                >
-                  Status
-                </Link>
-              </div>
-              <div className="flex items-center justify-center gap-8">
-                <p>
-                  Desenvolvido por{" "}
-                  <a
-                    href="https://github.com/tiagomiguel29"
-                    target="_blank"
-                    className="font-bold hover:underline"
-                    rel="noreferrer"
-                  >
-                    Tiago Oliveira
-                  </a>
-                </p>
-                <ThemeSwitcher />
-              </div>
-              <div>
-                Dados obtidos através do{" "}
-                <a
-                  href="https://www.parlamento.pt/Cidadania/Paginas/DadosAbertos.aspx"
-                  target="_blank"
-                  className="font-bold hover:underline"
-                >
-                  Portal de Dados Abertos do Parlamento
-                </a>
-              </div>
-            </footer>
-          </main>
-        </ThemeProvider>
-        </ThemeContextProvider>
-        <SpeedInsights />
-        <Analytics />
+          <SpeedInsights />
+          <Analytics />
         </AppRouterCacheProvider>
       </body>
     </html>

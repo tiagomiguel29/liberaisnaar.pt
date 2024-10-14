@@ -1,5 +1,6 @@
 "use client";
 
+import { useThemeContext } from "@/app/ThemeContext";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,6 +16,7 @@ import { useEffect, useState } from "react";
 const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { mode, setMode} = useThemeContext();
 
   // useEffect only runs on the client, so now we can safely show the UI
   useEffect(() => {
@@ -55,7 +57,11 @@ const ThemeSwitcher = () => {
       <DropdownMenuContent className="w-content" align="start">
         <DropdownMenuRadioGroup
           value={theme}
-          onValueChange={(e) => setTheme(e)}
+          onValueChange={(e) => {
+            setTheme(e);
+            setMode(e as 'light' | 'dark' | 'system');
+          }
+        }
         >
           <DropdownMenuRadioItem className="flex gap-2" value="light">
             <Sun size={ICON_SIZE} className="text-muted-foreground" />{" "}

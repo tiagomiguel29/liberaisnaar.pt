@@ -1,12 +1,16 @@
-"use client";
+// app/ThemeContext.tsx
+'use client';
 
-import { createContext, useState, ReactNode, useMemo, useContext } from "react";
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import { lightTheme, darkTheme } from "../theme";
+import { createContext, useMemo, ReactNode, useContext, useEffect, useState } from 'react';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { lightTheme, darkTheme } from '../theme';
+import { useTheme as useNextTheme } from 'next-themes';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface ThemeContextType {
   toggleTheme: () => void;
-  mode: "light" | "dark";
+  mode: 'system' | 'light' | 'dark';
+  setMode: (mode: 'system' | 'light' | 'dark') => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -14,26 +18,34 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const useThemeContext = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error("useThemeContext must be used within a ThemeProvider");
+    throw new Error('useThemeContext must be used within a ThemeProvider');
   }
   return context;
 };
 
 export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
-  const [mode, setMode] = useState<"light" | "dark">("light");
+  const { theme, setTheme, resolvedTheme } = useNextTheme();
 
-  const toggleTheme = () => {
-    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+  const [mode, setMode] = useState<'system' | 'light' | 'dark'>(theme as 'system' | 'light' | 'dark');
+
+  // Check the system's preference for dark mode
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const handleSetMode = (newMode: 'system' | 'light' | 'dark') => {
+    setMode(newMode);
+    setTheme(newMode);
   };
 
-  const theme = useMemo(
-    () => (mode === "light" ? lightTheme : darkTheme),
-    [mode]
-  );
+  const currentTheme = useMemo(() => {
+    if (mode === 'system') {
+      return prefersDarkMode ? darkTheme : lightTheme;
+    }
+    return mode === 'light' ? lightTheme : darkTheme;
+  }, [mode, prefersDarkMode]);
 
   return (
-    <ThemeContext.Provider value={{ toggleTheme, mode }}>
-      <ThemeProvider theme={theme}>
+    <ThemeContext.Provider value={{ toggleTheme: () => setTheme(mode), mode, setMode: handleSetMode }}>
+      <ThemeProvider theme={currentTheme}>
         <CssBaseline />
         {children}
       </ThemeProvider>
