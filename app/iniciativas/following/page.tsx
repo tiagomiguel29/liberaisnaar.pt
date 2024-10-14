@@ -4,25 +4,13 @@ import { Spinner } from "@/components/spinner";
 import { createClient } from "@/utils/supabase/client";
 import { Session } from "@supabase/supabase-js";
 import { useSearchParams } from "next/navigation";
-import { use, useEffect, useState } from "react";
-
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-
-import { VoteResultBadge } from "@/components/vote-result-badge";
-import { ExtendedInitiative, Follow } from "@/types/extended.types";
-import { FollowButton } from "@/components/follow-button";
-import { format } from "date-fns";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Paginator } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import { NoInitiativesFound } from "@/components/not-found-initiatives";
+import { InitiativeCard } from "@/components/initiative-card";
 
 export default function FollowingInitiativesPage() {
   const searchParams = useSearchParams();
@@ -34,11 +22,9 @@ export default function FollowingInitiativesPage() {
     Number.parseInt(searchParams.get("limit") || "10")
   );
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [count, setCount] = useState<number>(0);
   const [authLoading, setAuthLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
-  const [userId, setUserId] = useState<number | null>(null);
   const [followClick, setFollowClick] = useState<boolean>(false);
 
   const supabase = createClient();
@@ -90,7 +76,6 @@ export default function FollowingInitiativesPage() {
       }
 
       setInitiatives(data);
-      setCount(count ?? 0);
       setTotalPages(Math.ceil((count ?? 0) / limit));
     };
 
@@ -132,47 +117,18 @@ export default function FollowingInitiativesPage() {
                 <Spinner />
               </div>
             )}
-            {!loading && initiatives.length === 0 && (
-            <NoInitiativesFound />  
-            )}
+            {!loading && initiatives.length === 0 && <NoInitiativesFound />}
             {!loading &&
               initiatives.map((i) => (
-                <Card key={i.id}>
-                  <CardHeader className="pb-2">
-                    <div className="flex justify-between">
-                      <CardTitle className="text-lg font-bold">
-                        {i.title}
-                      </CardTitle>
-                      <FollowButton
-                        initiativeId={i.id}
-                        userId={session?.user.id!}
-                        followed={i.followed_initiatives}
-                        onSuccessClick={() => setFollowClick(!followClick)}
-                      />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div>
-                      <VoteResultBadge vote={i.firstVoteResult} />
-                      <p className="text-muted-foreground text-sm mt-2">
-                        Submetida em{" "}
-                        {format(new Date(i.submission_date), "dd/MM/yyyy")}
-                      </p>
-                    </div>
-                    <PartyAuthors initiative={i} />
-                  </CardContent>
-                  <CardFooter>
-                    <div className="flex flex-row-reverse w-full">
-                      <Link
-                        href={`/iniciativas/${i.id}`}
-                        className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                        prefetch={false}
-                      >
-                        Consultar Iniciativa
-                      </Link>
-                    </div>
-                  </CardFooter>
-                </Card>
+                <>
+                  <InitiativeCard
+                    key={i.id}
+                    initiative={i}
+                    user={session?.user}
+                    followedInitiatives={i.followed_initiatives}
+                    onFollowClick={() => setFollowClick((prev) => !prev)}
+                  />
+                </>
               ))}
           </div>
           <div className="p-4 flex justify-center">
@@ -190,22 +146,3 @@ export default function FollowingInitiativesPage() {
     </main>
   );
 }
-
-const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
-  if (initiative.party_authors.length > 0) {
-    return (
-      <p className="text-muted-foreground text-sm mt-2">
-        Partidos:{" "}
-        {initiative.party_authors.map(({ party }) => party.acronym).join(", ")}
-      </p>
-    );
-  }
-
-  const otherAuthors = initiative.other_authors;
-
-  return (
-    <p className="text-muted-foreground text-sm mt-2">
-      Autores: {otherAuthors?.map((a) => a).join(", ")}
-    </p>
-  );
-};

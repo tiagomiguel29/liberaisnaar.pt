@@ -1,24 +1,15 @@
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import supabase from "@/utils/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { VoteResultBadge } from "@/components/vote-result-badge";
 import { ExtendedInitiative, Follow } from "@/types/extended.types";
 import { createClient } from "@/utils/supabase/server";
-import { FollowButton } from "@/components/follow-button";
-import { format } from "date-fns";
 import { BookmarkIcon } from "lucide-react";
 import { Paginator } from "@/components/pagination";
 import { Metadata } from "next";
 import { InitiativesFilters } from "./filters.client";
 import { NoInitiativesFound } from "@/components/not-found-initiatives";
-import { Button, Pagination } from "@mui/material";
+import { Button } from "@mui/material";
+import { InitiativeCard } from "@/components/initiative-card";
 
 export const metadata: Metadata = {
   title: "Liberais na AR | Iniciativas",
@@ -124,43 +115,12 @@ export default async function Index({
             <div className="grid gap-4 md:gap-6 md:grid-cols-1">
               {initiatives.length === 0 && <NoInitiativesFound />}
               {initiatives.map((i) => (
-                <Card key={i.id}>
-                  <CardHeader className="pb-2">
-                    <div className="flex justify-between">
-                      <CardTitle className="text-lg font-bold">
-                        {i.title}
-                      </CardTitle>
-                      {user && (
-                        <div className="px-1">
-                          <FollowButton
-                            initiativeId={i.id}
-                            userId={user?.id}
-                            followed={followedInitiatives}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div>
-                      <VoteResultBadge vote={i.firstVoteResult} />
-                      <p className="text-muted-foreground text-sm mt-2">
-                        Submetida em{" "}
-                        {format(new Date(i.submission_date), "dd/MM/yyyy")}
-                      </p>
-                    </div>
-                    <PartyAuthors initiative={i} />
-                  </CardContent>
-                  <CardFooter>
-                    <div className="flex flex-row-reverse w-full">
-                      <Button variant="contained">
-                        <Link href={`/iniciativas/${i.id}`} prefetch={false}>
-                          Consultar Iniciativa
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardFooter>
-                </Card>
+                <InitiativeCard
+                  key={i.id}
+                  initiative={i}
+                  user={user}
+                  followedInitiatives={followedInitiatives}
+                />
               ))}
             </div>
             <div className="p-4 flex justify-center">
@@ -178,22 +138,3 @@ export default async function Index({
     </>
   );
 }
-
-const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
-  if (initiative.party_authors.length > 0) {
-    return (
-      <p className="text-muted-foreground text-sm mt-2">
-        Partidos:{" "}
-        {initiative.party_authors.map(({ party }) => party.acronym).join(", ")}
-      </p>
-    );
-  }
-
-  const otherAuthors = initiative.other_authors;
-
-  return (
-    <p className="text-muted-foreground text-sm mt-2">
-      Autores: {otherAuthors?.map((a) => a).join(", ")}
-    </p>
-  );
-};
