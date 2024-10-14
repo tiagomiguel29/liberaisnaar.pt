@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Metadata } from "next";
+import { TextField } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Liberais na AR | Sign up",
@@ -62,18 +63,25 @@ export default async function Signup({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex min-w-64 max-w-64 flex-col gap-2 [&>input]:mb-3">
-            <Label htmlFor="name">Nome</Label>
-            <Input name="name" placeholder="O teu nome" required />
-            <Label htmlFor="email">Email</Label>
-            <Input name="email" placeholder="you@example.com" required />
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              name="password"
-              placeholder="password"
-              minLength={6}
+          <div className="flex min-w-64 max-w-64 flex-col gap-4 [&>input]:mb-3">
+            <TextField
+              name="name"
+              label="Name"
               required
+              variant="outlined"
+            />
+            <TextField
+              name="email"
+              label="Email"
+              required
+              variant="outlined"
+            />
+            <TextField
+              name="password"
+              label="Password"
+              type="password"
+              required
+              variant="outlined"
             />
             <SubmitButton formAction={signUpAction} pendingText="A submeter...">
               Sign up
