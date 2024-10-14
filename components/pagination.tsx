@@ -83,7 +83,14 @@ export function Paginator({
 
   function onSelectChange(page: string) {
     if (href) {
-      window.location.href = `${basePath}?page=${page}&limit=${limit}`;
+      const searchParams = new URLSearchParams(window.location.search);
+  
+      searchParams.set('page', page);
+      searchParams.set('limit', limit.toString());
+  
+      const newUrl = `${basePath}?${searchParams.toString()}`;
+  
+      window.location.href = newUrl;
     }
   }
 

@@ -26,6 +26,8 @@ import { BookmarkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Paginator } from "@/components/pagination";
 import { Metadata } from "next";
+import { InitiativesFilters } from "./filters.client";
+import { NoInitiativesFound } from "@/components/not-found-initiatives";
 
 
 export const metadata: Metadata = {
@@ -35,31 +37,46 @@ export const metadata: Metadata = {
 export default async function Index({
   searchParams,
 }: {
-  searchParams: { page: string | undefined; limit: string | undefined };
+  searchParams: { page: string | undefined; limit: string | undefined; type: string | undefined; from: string | undefined; to: string | undefined };
 }) {
   // Get current page number from query params
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10;
+  const { type, from, to } = searchParams;
+  
 
   const partyAcronym = "IL";
 
-  const initiativesRes = supabase
+  // Base query
+  let query = supabase
     .from("initiatives")
     .select(
       `*,
         initiatives_party_authors!inner(initiativeId, partyAcronym),
-        party_authors:initiatives_party_authors(party:parties(*))
-        `,
-      {
-        count: "exact",
-      }
+        party_authors:initiatives_party_authors(party:parties(*))`,
+      { count: "exact" }
     )
     .eq("initiatives_party_authors.partyAcronym", partyAcronym)
-    .order("submission_date", { ascending: true })
-    .order("number", { ascending: true })
+    .order("submission_date", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
 
-  const { data, error, count } = await initiativesRes;
+  // Apply type filter only if type is defined and not "all"
+  if (type && type !== "all") {
+    query = query.eq("type_description", type);
+  }
+
+  // Apply date range filter if both `from` and `to` are defined
+  if (from && to) {
+    query = query.gte("submission_date", from).lte("submission_date", to);
+  } else if (from) {
+    // Apply only from date if defined
+    query = query.gte("submission_date", from);
+  } else if (to) {
+    // Apply only to date if defined
+    query = query.lte("submission_date", to);
+  }
+
+  const { data, error, count } = await query;
 
   if (error) {
     console.error(error);
@@ -111,8 +128,11 @@ export default async function Index({
                 </Button>
               )}
             </div>
-
+            <InitiativesFilters />
             <div className="grid gap-4 md:gap-6 md:grid-cols-1">
+              {initiatives.length === 0 && (
+                <NoInitiativesFound />
+              )}
               {initiatives.map((i) => (
                 <Card key={i.id}>
                   <CardHeader className="pb-2">
