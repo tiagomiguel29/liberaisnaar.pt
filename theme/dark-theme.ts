@@ -27,6 +27,9 @@ export const darkThemeOptions = {
       disabledBackground: "hsl(0, 0%, 14.9%)", // --muted in dark mode
       hover: "hsl(0, 0%, 83.1%)", // --ring in dark mode
     },
+    info: {
+      main: "hsl(0, 0%, 9%)",
+    },
     warning: {
       main: "hsl(220, 70%, 50%)", // --chart-1 in dark mode
     },

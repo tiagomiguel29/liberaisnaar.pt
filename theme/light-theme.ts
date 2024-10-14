@@ -1,5 +1,6 @@
 export const lightThemeOptions = {
   palette: {
+    mode: "light",
     background: {
       default: "hsl(0, 0%, 100%)", // --background
       paper: "hsl(0, 0%, 100%)", // --card or --popover
