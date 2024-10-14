@@ -7,10 +7,10 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Paginator } from "@/components/pagination";
-import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import { NoInitiativesFound } from "@/components/not-found-initiatives";
 import { InitiativeCard } from "@/components/initiative-card";
+import { Button } from "@mui/material";
 
 export default function FollowingInitiativesPage() {
   const searchParams = useSearchParams();
@@ -100,15 +100,11 @@ export default function FollowingInitiativesPage() {
       <div className="container mx-auto grid gap-8 md:gap-12">
         <div>
           <div className="my-4">
-            <Button asChild variant={"outline"}>
-              <Link
-                href="/iniciativas"
-                className="flex justify-center items-center gap-x-2"
-              >
-                <ArrowLeftIcon />
+            <Link href="/iniciativas">
+              <Button variant="contained" startIcon={<ArrowLeftIcon />}>
                 Voltar
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </div>
           <h1 className="text-2xl font-bold mb-4">Iniciativas Guardadas</h1>
           <div className="grid gap-4 md:gap-6 md:grid-cols-1">
