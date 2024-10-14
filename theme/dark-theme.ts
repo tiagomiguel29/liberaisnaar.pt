@@ -19,7 +19,7 @@ export const darkThemeOptions = {
       contrastText: "hsl(0, 0%, 98%)", // --secondary-foreground
     },
     error: {
-      main: "hsl(0, 62.8%, 30.6%)", // --destructive
+      main: "rgb(239, 68, 68)", // --destructive
       contrastText: "hsl(0, 0%, 98%)", // --destructive-foreground
     },
     divider: "hsl(0, 0%, 14.9%)", // --border in dark mode
@@ -31,7 +31,7 @@ export const darkThemeOptions = {
       main: "hsl(220, 70%, 50%)", // --chart-1 in dark mode
     },
     success: {
-      main: "hsl(160, 60%, 45%)", // --chart-2 in dark mode
+      main: "rgb(34, 197, 94)", // --chart-2 in dark mode
     },
   },
 };

@@ -18,7 +18,7 @@ export const lightThemeOptions = {
       contrastText: "hsl(0, 0%, 9%)", // --secondary-foreground
     },
     error: {
-      main: "hsl(0, 84.2%, 60.2%)", // --destructive
+      main: "rgb(239, 68, 68)", // --destructive
       contrastText: "hsl(0, 0%, 98%)", // --destructive-foreground
     },
     divider: "hsl(0, 0%, 89.8%)", // --border
@@ -33,7 +33,7 @@ export const lightThemeOptions = {
       main: "hsl(12, 76%, 61%)", // --chart-1
     },
     success: {
-      main: "hsl(173, 58%, 39%)", // --chart-2
+      main: "rgb(34, 197, 94)", // --chart-2
     },
   },
 };
