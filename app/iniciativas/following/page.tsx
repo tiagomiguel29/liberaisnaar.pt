@@ -7,16 +7,6 @@ import { useSearchParams } from "next/navigation";
 import { use, useEffect, useState } from "react";
 
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-
-import {
   Card,
   CardHeader,
   CardTitle,
@@ -185,7 +175,7 @@ export default function FollowingInitiativesPage() {
                 </Card>
               ))}
           </div>
-          <div className="p-4">
+          <div className="p-4 flex justify-center">
             <Paginator
               currentPage={page}
               limit={limit}

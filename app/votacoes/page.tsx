@@ -1,14 +1,4 @@
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-
-import {
   Card,
   CardHeader,
   CardTitle,
@@ -25,6 +15,7 @@ import Link from "next/link";
 import { ExtendedVote, InitiativeWithParties } from "@/types/extended.types";
 import { format } from "date-fns";
 import { Metadata } from "next";
+import { Paginator } from "@/components/pagination";
 
 export const metadata: Metadata = {
   title: "Liberais na AR | Votações",
@@ -121,59 +112,14 @@ export default async function Index({
                 </Card>
               ))}
             </div>
-            <div className="p-4">
-              <Pagination>
-                <PaginationContent className="flex flex-wrap">
-                  {/* Previous button */}
-                  {page > 1 && (
-                    <PaginationPrevious
-                      href={`/votacoes?page=${page - 1}&limit=${limit}`}
-                      isActive={page > 1}
-                    >
-                      Anterior
-                    </PaginationPrevious>
-                  )}
-                  {/* Left Ellipsis (only show if page > 2) */}
-                  {page > 2 && (
-                    <PaginationItem>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  )}
-
-                  {/* Page numbers logic */}
-                  {Array.from({ length: totalPages }, (_, i) => i + 1)
-                    .filter(
-                      (n) => n === page || n === page - 1 || n === page + 1
-                    ) // Only show current, previous, and next pages
-                    .map((n) => (
-                      <PaginationItem key={n}>
-                        <PaginationLink
-                          href={`/votacoes?page=${n}&limit=${limit}`}
-                          isActive={n === page}
-                        >
-                          {n}
-                        </PaginationLink>
-                      </PaginationItem>
-                    ))}
-
-                  {/* Right Ellipsis (only show if more than 3 pages left) */}
-                  {page < totalPages - 1 && (
-                    <PaginationItem>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  )}
-
-                  {/* Next button */}
-                  {page < totalPages && (
-                    <PaginationNext
-                      href={`/votacoes?page=${page + 1}&limit=${limit}`}
-                      isActive={page < totalPages}
-                    >
-                      Seguinte
-                    </PaginationNext>
-                  )}
-                </PaginationContent>
-              </Pagination>
+            <div className="p-4 flex justify-center">
+              <Paginator
+                currentPage={page}
+                limit={limit}
+                totalPages={totalPages}
+                href={true}
+                basePath="/votacoes"
+              />
             </div>
           </div>
         </div>

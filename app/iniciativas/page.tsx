@@ -1,13 +1,4 @@
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
   Card,
   CardHeader,
   CardTitle,
@@ -27,7 +18,7 @@ import { Paginator } from "@/components/pagination";
 import { Metadata } from "next";
 import { InitiativesFilters } from "./filters.client";
 import { NoInitiativesFound } from "@/components/not-found-initiatives";
-import { Button } from "@mui/material";
+import { Button, Pagination } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Liberais na AR | Iniciativas",
@@ -172,7 +163,7 @@ export default async function Index({
                 </Card>
               ))}
             </div>
-            <div className="p-4">
+            <div className="p-4 flex justify-center">
               <Paginator
                 currentPage={page}
                 limit={limit}
