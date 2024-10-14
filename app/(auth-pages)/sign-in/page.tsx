@@ -4,7 +4,6 @@ import { FormMessage, Message } from "@/components/form-message";
 import { Spinner } from "@/components/spinner";
 import { SubmitButton } from "@/components/submit-button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -23,6 +22,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 import { errors } from "@/utils/supabase/errors";
+import { Button, TextField } from "@mui/material";
 import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -198,7 +198,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="min-w-64 flex flex-col gap-2 [&>input]:mb-3">
+              <div className="min-w-64 flex flex-col gap-4 [&>input]:mb-3">
                 {loginError && (
                   <div className="mb-2">
                     <Alert variant="destructive">
@@ -208,10 +208,24 @@ export default function Login({ searchParams }: { searchParams: Message }) {
                     </Alert>
                   </div>
                 )}
-                <Label htmlFor="email">Email</Label>
-                <Input name="email" placeholder="you@example.com" required />
+
+                <TextField
+                  name="email"
+                  label="Email"
+                  placeholder="you@example.com"
+                  required
+                  variant="outlined"
+                />
+                
+
+                <TextField
+                  label="Password"
+                  type="password"
+                  name="password"
+                  placeholder="password"
+                  required
+                />
                 <div className="flex justify-between items-center">
-                  <Label htmlFor="password">Password</Label>
                   <Link
                     className="text-xs text-foreground underline"
                     href="/forgot-password"
@@ -219,13 +233,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
                     Esqueceste-te da password?
                   </Link>
                 </div>
-                <Input
-                  type="password"
-                  name="password"
-                  placeholder="password"
-                  required
-                />
-                <Button type="submit" disabled={loginLoading}>
+                <Button type="submit" variant="contained" disabled={loginLoading}>
                   {loginLoading ? <Spinner /> : "Login"}
                 </Button>
                 <FormMessage message={searchParams} />
@@ -278,6 +286,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
             <div className="w-full flex justify-center items-center">
               <Button
                 onClick={() => on2FASubmitClicked()}
+                variant="contained"
                 disabled={loginLoading || verifyCode.length !== 6}
               >
                 {loginLoading ? <Spinner /> : "Verificar"}
