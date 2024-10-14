@@ -1,7 +1,6 @@
 import { EventsInitiative } from "@/components/events-initiative";
 import { FollowButton } from "@/components/follow-button";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VoteResultBadge } from "@/components/vote-result-badge";
 import {
@@ -11,13 +10,13 @@ import {
 } from "@/types/extended.types";
 import supabase from "@/utils/supabase";
 import { createClient } from "@/utils/supabase/server";
+import { Button, Chip } from "@mui/material";
 import { format } from "date-fns";
 import { FileIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata( { params }: { params: { id: string } }) {
-
+export async function generateMetadata({ params }: { params: { id: string } }) {
   const { data, error } = await supabase
     .from("initiatives")
     .select("title")
@@ -151,16 +150,19 @@ export default async function InitiativeDetailsPage({
                     </div>
                   </div>
                   <div>
-                    <Button asChild size="sm" variant="default">
-                      <Link
-                        href={initiative.text_link!}
-                        target="_blank"
-                        className="flex items-center gap-x-2"
+                    <Link
+                      href={initiative.text_link!}
+                      target="_blank"
+                      className="flex items-center gap-x-2"
+                    >
+                      <Button
+                        variant="contained"
+                        size="small"
+                        endIcon={<FileIcon />}
                       >
                         Ver Texto
-                        <FileIcon className="w-4 h-4" />
-                      </Link>
-                    </Button>
+                      </Button>
+                    </Link>
                   </div>
                   <PartyAuthors initiative={initiative} />
                 </div>
@@ -176,12 +178,12 @@ export default async function InitiativeDetailsPage({
                 <CardContent>
                   <div className="flex flex-wrap gap-1">
                     {initiative.deputy_authors.map(({ deputy }) => (
-                      <Badge
-                        className="bg-secondary-foreground"
+                      <Chip
+                        label={deputy.name}
                         key={deputy.record_id}
-                      >
-                        {deputy.name}
-                      </Badge>
+                        size="small"
+                        color="primary"
+                      />
                     ))}
                   </div>
                 </CardContent>
