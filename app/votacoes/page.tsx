@@ -16,6 +16,7 @@ import { ExtendedVote, InitiativeWithParties } from "@/types/extended.types";
 import { format } from "date-fns";
 import { Metadata } from "next";
 import { Paginator } from "@/components/pagination";
+import { Button } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Liberais na AR | Votações",
@@ -103,10 +104,9 @@ export default async function Index({
                     </div>
                     <Link
                       href={`/iniciativas/${v.event.initiative.id}`}
-                      className="inline-flex h-9 w-full md:w-fit items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                       prefetch={false}
                     >
-                      Consultar Iniciativa
+                      <Button variant="contained">Consultar Iniciativa</Button>
                     </Link>
                   </CardFooter>
                 </Card>
