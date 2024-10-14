@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
 import {
@@ -9,13 +8,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
-  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -47,7 +53,9 @@ export const InitiativesFilters = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [date, setDate] = useState<DateRange | undefined>({
-    from: searchParams.get("from") ? new Date(searchParams.get("from")!) : undefined,
+    from: searchParams.get("from")
+      ? new Date(searchParams.get("from")!)
+      : undefined,
     to: searchParams.get("to") ? new Date(searchParams.get("to")!) : undefined,
   });
   const [type, setType] = useState<string>(searchParams.get("type") || "all");
@@ -71,46 +79,61 @@ export const InitiativesFilters = () => {
       <h2 className="text-lg font-semibold">Filtros</h2>
       <div className="flex flex-col sm:flex-row sm:items-end gap-4">
         <div className="space-y-2">
-          <Label htmlFor="type-select">Tipo de Iniciativa</Label>
-          <Select value={type} onValueChange={setType}>
-            <SelectTrigger className="w-full sm:w-[240px]">
-              <SelectValue placeholder="Selecionar tipo" />
-            </SelectTrigger>
-            <SelectContent>
+          <FormControl
+            fullWidth
+            sx={{
+              width: "300px",
+            }}
+          >
+            <InputLabel id="type-select">Tipo de Iniciativa</InputLabel>
+            <Select
+              labelId="type-select"
+              value={type}
+              label="Tipo de Iniciativa"
+              size="small"
+              slotProps={{}}
+              onChange={(e) => setType(e.target.value)}
+              fullWidth
+            >
               {typeOtions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <MenuItem key={option.value} value={option.value}>
                   {option.label}
-                </SelectItem>
+                </MenuItem>
               ))}
-            </SelectContent>
-          </Select>
+            </Select>
+          </FormControl>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="date-range">Data de Submissão</Label>
           <Popover>
             <PopoverTrigger asChild>
-              <Button
+              <TextField
                 id="date"
-                variant={"outline"}
+                variant="outlined"
+                size="small"
+                label="Data de Submissão"
+                sx={{
+                  width: "300px",
+                }}
+                slotProps={{
+                  input: {
+                    readOnly: true,
+                    startAdornment: <CalendarIcon />,
+                  },
+                }}
+                value={
+                  date?.from
+                    ? date.to
+                      ? format(date.from, "LLL dd, y") +
+                        " - " +
+                        format(date.to, "LLL dd, y")
+                      : format(date.from, "LLL dd, y")
+                    : "Selecionar data de submissão"
+                }
                 className={cn(
                   "w-full justify-start text-left font-normal",
                   !date && "text-muted-foreground"
                 )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date?.from ? (
-                  date.to ? (
-                    <>
-                      {format(date.from, "LLL dd, y")} -{" "}
-                      {format(date.to, "LLL dd, y")}
-                    </>
-                  ) : (
-                    format(date.from, "LLL dd, y")
-                  )
-                ) : (
-                  <span>Selecionar intervalo de datas</span>
-                )}
-              </Button>
+              ></TextField>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
@@ -124,8 +147,12 @@ export const InitiativesFilters = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <Button className="w-full sm:w-auto" onClick={handleSubmit}>
-            Aplicar Filtros
+        <Button
+          variant="contained"
+          className="w-full sm:w-auto"
+          onClick={handleSubmit}
+        >
+          Aplicar Filtros
         </Button>
       </div>
     </div>
