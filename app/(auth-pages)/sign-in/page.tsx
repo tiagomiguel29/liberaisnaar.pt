@@ -216,7 +216,6 @@ export default function Login({ searchParams }: { searchParams: Message }) {
                   required
                   variant="outlined"
                 />
-                
 
                 <TextField
                   label="Password"
@@ -233,7 +232,11 @@ export default function Login({ searchParams }: { searchParams: Message }) {
                     Esqueceste-te da password?
                   </Link>
                 </div>
-                <Button type="submit" variant="contained" disabled={loginLoading}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={loginLoading}
+                >
                   {loginLoading ? <Spinner /> : "Login"}
                 </Button>
                 <FormMessage message={searchParams} />
