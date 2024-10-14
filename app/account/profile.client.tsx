@@ -2,7 +2,6 @@
 
 import { Spinner } from "@/components/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
+import { Button, TextField } from "@mui/material";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -98,18 +98,21 @@ export const ProfileSettings = ({ user }: { user: any }) => {
               </Alert>
             )}
             <div className="grid gap-2">
-              <Label htmlFor="name">Nome</Label>
-              <Input
+              <TextField
                 id="name"
+                label="Name"
                 placeholder={user.user_metadata.name}
                 value={name}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                }}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
           </div>
         </CardContent>
         <CardFooter className="border-t p-6">
-          <Button onClick={handleNameChange} disabled={updatingName}>
+          <Button variant="contained" onClick={handleNameChange} disabled={updatingName}>
             {updatingName ? <Spinner /> : "Guardar"}
           </Button>
         </CardFooter>
@@ -137,18 +140,21 @@ export const ProfileSettings = ({ user }: { user: any }) => {
               </Alert>
             )}
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
+              <TextField
                 id="email"
+                label="Email"
                 placeholder={user.email}
                 value={email}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                }}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
         </CardContent>
         <CardFooter className="border-t p-6">
-          <Button onClick={handleEmailChange} disabled={updatingEmail}>
+          <Button variant="contained" onClick={handleEmailChange} disabled={updatingEmail}>
             {updatingEmail ? <Spinner /> : "Guardar"}
           </Button>
         </CardFooter>

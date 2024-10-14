@@ -1,6 +1,5 @@
 "use client";
 import { Spinner } from "@/components/spinner";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -13,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { Tables } from "@/types/database.types";
 import { createClient } from "@/utils/supabase/client";
+import { Button } from "@mui/material";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -107,7 +107,7 @@ export const NotificationSettings = ({
         </div>
       </CardContent>
       <CardFooter className="border-t p-6">
-        <Button onClick={saveSettings} disabled={loading}>
+        <Button variant="contained" onClick={saveSettings} disabled={loading}>
           {loading ? <Spinner /> : "Guardar"}
         </Button>
       </CardFooter>

@@ -1,8 +1,7 @@
 "use client";
 
 import { Spinner } from "@/components/spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";;
 import {
   Card,
   CardHeader,
@@ -27,6 +26,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { createClient } from "@/utils/supabase/client";
+import { Button, TextField } from "@mui/material";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
@@ -145,24 +145,20 @@ export const SecuritySettings = () => {
                 <AlertDescription>{passwordChangeError}</AlertDescription>
               </Alert>
             )}
-            <div className="grid gap-2">
-              <Label htmlFor="new-password">Nova Password</Label>
-              <Input
-                id="new-password"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="confirm-password">Confirmar Password</Label>
-              <Input
-                id="confirm-password"
-                type="password"
-                value={newPasswordConfirm}
-                onChange={(e) => setNewPasswordConfirm(e.target.value)}
-              />
-            </div>
+            <TextField
+              id="new-password"
+              label="Nova Password"
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <TextField
+              id="confirm-password"
+              label="Confirmar Password"
+              type="password"
+              value={newPasswordConfirm}
+              onChange={(e) => setNewPasswordConfirm(e.target.value)}
+            />
             <div className="flex items-center space-x-2">
               <Switch
                 id="two-factor"
@@ -179,7 +175,7 @@ export const SecuritySettings = () => {
           </div>
         </CardContent>
         <CardFooter className="border-t p-6">
-          <Button onClick={handleChangePassword} disabled={updatingPassword}>
+          <Button onClick={handleChangePassword} variant="contained" disabled={updatingPassword}>
             {updatingPassword ? <Spinner /> : "Atualizar Password"}
           </Button>
         </CardFooter>
@@ -317,11 +313,11 @@ const Setup2FA = ({
         </div>
         <DialogFooter>
           <div className="flex flex-row gap-x-2">
-            <Button variant="destructive" onClick={handleClose}>
+            <Button variant="contained" color="error" onClick={handleClose}>
               Cancelar
             </Button>
             <Button
-              variant="default"
+              variant="contained"
               onClick={() => onEnableClicked()}
               disabled={loading}
             >
