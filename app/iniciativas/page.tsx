@@ -103,12 +103,14 @@ export default async function Index({
             <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between py-6 gap-y-4">
               <h1 className="text-2xl font-bold">Iniciativas</h1>
               {user && (
-                <Button
-                  variant="contained"
-                  endIcon={<BookmarkIcon className="w-5 h-5" />}
-                >
-                  <Link href="/iniciativas/following">Guardadas </Link>
-                </Button>
+                <Link href="/iniciativas/following">
+                  <Button
+                    variant="contained"
+                    endIcon={<BookmarkIcon className="w-5 h-5" />}
+                  >
+                    Guardadas
+                  </Button>
+                </Link>
               )}
             </div>
             <InitiativesFilters />
