@@ -23,12 +23,11 @@ import { createClient } from "@/utils/supabase/server";
 import { FollowButton } from "@/components/follow-button";
 import { format } from "date-fns";
 import { BookmarkIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Paginator } from "@/components/pagination";
 import { Metadata } from "next";
 import { InitiativesFilters } from "./filters.client";
 import { NoInitiativesFound } from "@/components/not-found-initiatives";
-
+import { Button } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Liberais na AR | Iniciativas",
@@ -37,13 +36,18 @@ export const metadata: Metadata = {
 export default async function Index({
   searchParams,
 }: {
-  searchParams: { page: string | undefined; limit: string | undefined; type: string | undefined; from: string | undefined; to: string | undefined };
+  searchParams: {
+    page: string | undefined;
+    limit: string | undefined;
+    type: string | undefined;
+    from: string | undefined;
+    to: string | undefined;
+  };
 }) {
   // Get current page number from query params
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10;
   const { type, from, to } = searchParams;
-  
 
   const partyAcronym = "IL";
 
@@ -117,22 +121,17 @@ export default async function Index({
             <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between py-6 gap-y-4">
               <h1 className="text-2xl font-bold">Iniciativas</h1>
               {user && (
-                <Button asChild variant={"outline"}>
-                  <Link
-                    href="/iniciativas/following"
-                    className="flex justify-center items-center gap-x-2"
-                  >
-                    Guardadas{" "}
-                    <BookmarkIcon className="w-5 h-5 fill-white text-primary" />
-                  </Link>
+                <Button
+                  variant="contained"
+                  endIcon={<BookmarkIcon className="w-5 h-5" />}
+                >
+                  <Link href="/iniciativas/following">Guardadas </Link>
                 </Button>
               )}
             </div>
             <InitiativesFilters />
             <div className="grid gap-4 md:gap-6 md:grid-cols-1">
-              {initiatives.length === 0 && (
-                <NoInitiativesFound />
-              )}
+              {initiatives.length === 0 && <NoInitiativesFound />}
               {initiatives.map((i) => (
                 <Card key={i.id}>
                   <CardHeader className="pb-2">
@@ -141,11 +140,13 @@ export default async function Index({
                         {i.title}
                       </CardTitle>
                       {user && (
-                        <FollowButton
-                          initiativeId={i.id}
-                          userId={user?.id}
-                          followed={followedInitiatives}
-                        />
+                        <div className="px-1">
+                          <FollowButton
+                            initiativeId={i.id}
+                            userId={user?.id}
+                            followed={followedInitiatives}
+                          />
+                        </div>
                       )}
                     </div>
                   </CardHeader>
@@ -161,13 +162,11 @@ export default async function Index({
                   </CardContent>
                   <CardFooter>
                     <div className="flex flex-row-reverse w-full">
-                      <Link
-                        href={`/iniciativas/${i.id}`}
-                        className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                        prefetch={false}
-                      >
-                        Consultar Iniciativa
-                      </Link>
+                      <Button variant="contained">
+                        <Link href={`/iniciativas/${i.id}`} prefetch={false}>
+                          Consultar Iniciativa
+                        </Link>
+                      </Button>
                     </div>
                   </CardFooter>
                 </Card>
