@@ -2,9 +2,8 @@ import { forgotPasswordAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/server";
+import { TextField } from "@mui/material";
 import { redirect } from "next/navigation";
 
 export default async function ForgotPassword({
@@ -27,15 +26,14 @@ export default async function ForgotPassword({
   }
 
   return (
-    <Card>
+    <Card className="w-full">
       <form className="flex-1 flex flex-col w-full gap-2 text-foreground [&>input]:mb-6  mx-auto">
         <CardHeader>
           <CardTitle>Reset Password</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col gap-2 [&>input]:mb-3 min-w-64 max-w-64">
-            <Label htmlFor="email">Email</Label>
-            <Input name="email" placeholder="you@example.com" required />
+          <div className="flex flex-col gap-4 [&>input]:mb-3">
+            <TextField label="Email" type="email" name="email" required />
             <SubmitButton formAction={forgotPasswordAction}>
               Reset Password
             </SubmitButton>
