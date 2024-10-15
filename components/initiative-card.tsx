@@ -66,8 +66,8 @@ export const InitiativeCard = ({
       </CardContent>
       <CardFooter>
         <div className="flex flex-row-reverse w-full">
-          <Link href={`/iniciativas/${initiative.id}`} prefetch={false}>
-            <Button variant="contained">Consultar Iniciativa</Button>
+          <Link href={`/iniciativas/${initiative.id}`} prefetch={false} className="w-full md:w-auto">
+            <Button fullWidth variant="contained">Consultar Iniciativa</Button>
           </Link>
         </div>
       </CardFooter>
