@@ -51,11 +51,14 @@ export default async function InitiativeDetailsPage({
             party:parties(acronym, name)
         ),
         attachments(*),
-        events(*, votes:votes(*,
+        events(*,
+        attachments(*), 
+        votes:votes(*,
           inFavor:_InFavorVotes(party:parties(acronym)),
           against:_AgainstVotes(party:parties(acronym)),
           abstained:_AbstainedVotes(party:parties(acronym))
-        ))
+        )
+          )
         `
     )
     .eq("id", params.id)
