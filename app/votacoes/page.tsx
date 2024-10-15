@@ -93,14 +93,15 @@ export default async function Index({
                     </div>
                   </CardContent>
                   <CardFooter className="flex flex-col md:flex-row md:justify-between gap-y-2">
-                    <div>
+                    <div className="w-full md:w-auto">
                       <PartyAuthors initiative={v.event.initiative} />
                     </div>
                     <Link
                       href={`/iniciativas/${v.event.initiative.id}`}
                       prefetch={false}
+                      className="w-full md:w-auto"
                     >
-                      <Button variant="contained">Consultar Iniciativa</Button>
+                      <Button fullWidth variant="contained">Consultar Iniciativa</Button>
                     </Link>
                   </CardFooter>
                 </Card>
