@@ -1,18 +1,11 @@
 "use client";
 
 import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import {
   Button,
@@ -61,7 +54,6 @@ export const InitiativesFilters = () => {
   const [type, setType] = useState<string>(searchParams.get("type") || "all");
 
   const handleSubmit = () => {
-    console.log("Filters applied:", { type, date });
     const st = new URLSearchParams();
     if (type && type !== "all") {
       st.set("type", type);
