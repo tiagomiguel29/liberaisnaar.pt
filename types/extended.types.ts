@@ -15,6 +15,7 @@ export type VoteWithParties = Vote & {
 };
 
 export type EventWithVotes = Event & {
+    attachments: Attachment[];
     votes: VoteWithParties[];
 };
 
