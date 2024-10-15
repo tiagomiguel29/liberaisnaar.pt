@@ -1,9 +1,9 @@
 import { signOutAction } from "@/app/actions";
 import Link from "next/link";
-import { Button } from "./ui/button";
 import { createClient } from "@/utils/supabase/server";
 import { SheetClose } from "./ui/sheet";
 import { redirect } from "next/navigation";
+import { Button } from "@mui/material";
 
 export async function HeaderAuth() {
   const supabase = createClient();
@@ -22,26 +22,29 @@ export async function HeaderAuth() {
 
   return user && isAuthenticated ? (
     <div className="flex items-center gap-4">
-      <Button asChild size="sm" variant={"secondary"}>
-        <Link href="/account" className="flex items-center gap-x-2">
-          <UserIcon className="h-4 w-4" />
+      <Link href="/account" className="flex items-center gap-x-2">
+        <Button size="small" variant="contained" color="secondary" startIcon={<UserIcon />}>
           {user.user_metadata.name}
-        </Link>
-      </Button>
+        </Button>
+      </Link>
       <form action={signOutAction}>
-        <Button type="submit" size="sm" variant={"destructive"}>
+        <Button type="submit" size="small" variant="contained" color="error">
           Sign out
         </Button>
       </form>
     </div>
   ) : (
     <div className="flex gap-2">
-      <Button asChild size="sm" className="w-full" variant={"secondary"}>
-        <Link href="/sign-in">Sign in</Link>
-      </Button>
-      <Button asChild size="sm" className="w-full" variant={"default"}>
-        <Link href="/sign-up">Sign up</Link>
-      </Button>
+      <Link href="/sign-in">
+        <Button size="small" variant="contained" color="secondary">
+          Sign in
+        </Button>
+      </Link>
+      <Link href="/sign-up">
+        <Button size="small" variant="text" color="secondary">
+          Sign up
+        </Button>
+      </Link>
     </div>
   );
 }
@@ -63,17 +66,16 @@ export async function HeaderAuthMobile() {
 
   return user && isAuthenticated ? (
     <div className="flex items-center gap-4">
-      <Button asChild size="sm" variant={"secondary"}>
-        <SheetClose asChild>
-          <Link href="/account" className="flex items-center gap-x-2">
-            <UserIcon className="h-4 w-4" />
+      <SheetClose asChild>
+        <Link href="/account" className="flex items-center gap-x-2">
+          <Button size="small" variant="outlined" startIcon={<UserIcon />}>
             {user.user_metadata.name}
-          </Link>
-        </SheetClose>
-      </Button>
+          </Button>
+        </Link>
+      </SheetClose>
       <form action={signOutAction}>
         <SheetClose asChild>
-          <Button type="submit" size="sm" variant={"destructive"}>
+          <Button type="submit" size="small" variant="contained" color="error">
             Sign out
           </Button>
         </SheetClose>
@@ -81,16 +83,20 @@ export async function HeaderAuthMobile() {
     </div>
   ) : (
     <div className="flex gap-2">
-      <Button asChild size="sm" className="w-full" variant={"secondary"}>
-        <SheetClose asChild>
-          <Link href="/sign-in">Sign in</Link>
-        </SheetClose>
-      </Button>
-      <Button asChild size="sm" className="w-full" variant={"default"}>
-        <SheetClose asChild>
-          <Link href="/sign-up">Sign up</Link>
-        </SheetClose>
-      </Button>
+      <SheetClose asChild>
+        <Link href="/sign-in">
+          <Button size="small" className="w-full" variant="contained">
+            Sign in
+          </Button>
+        </Link>
+      </SheetClose>
+      <SheetClose asChild>
+        <Link href="/sign-up">
+          <Button size="small" className="w-full" variant="text">
+            Sign up
+          </Button>
+        </Link>
+      </SheetClose>
     </div>
   );
 }
