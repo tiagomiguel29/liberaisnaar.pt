@@ -12,10 +12,14 @@ export const lightThemeOptions = {
     },
     primary: {
       main: "hsl(204, 100%, 28%)", // --primary
+      light: "hsl(204, 100%, 38%)", // --primary-light
+      dark: "hsl(204, 100%, 18%)", // --primary-dark
       contrastText: "hsl(0, 0%, 98%)", // --primary-foreground
     },
     secondary: {
       main: "hsl(0, 0%, 96.1%)", // --secondary
+      light: "hsl(0, 0%, 100%)", // --secondary-light
+      dark: "hsl(0, 0%, 80%)", // --secondary-dark
       contrastText: "hsl(0, 0%, 9%)", // --secondary-foreground
     },
     error: {
@@ -31,10 +35,10 @@ export const lightThemeOptions = {
       main: "hsl(0, 0%, 9%)",
     },
     warning: {
-      main: "hsl(12, 76%, 61%)", // --chart-1
+      main: "hsl(12, 76%, 61%)",
     },
     success: {
-      main: "rgb(34, 197, 94)", // --chart-2
+      main: "rgb(34, 197, 94)",
     },
   },
 };

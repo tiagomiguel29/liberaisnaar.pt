@@ -12,10 +12,14 @@ export const darkThemeOptions = {
     },
     primary: {
       main: "hsl(204, 100%, 28%)", // --primary
+      light: "hsl(204, 100%, 38%)", // --primary-light
+      dark: "hsl(204, 100%, 18%)", // --primary-dark
       contrastText: "hsl(0, 0%, 9%)", // --primary-foreground in dark mode
     },
     secondary: {
       main: "hsl(0, 0%, 14.9%)", // --secondary
+      light: "hsl(0, 0%, 20%)", // --secondary-light
+      dark: "hsl(0, 0%, 9%)", // --secondary-dark
       contrastText: "hsl(0, 0%, 98%)", // --secondary-foreground
     },
     error: {
@@ -31,10 +35,11 @@ export const darkThemeOptions = {
       main: "hsl(0, 0%, 9%)",
     },
     warning: {
-      main: "hsl(220, 70%, 50%)", // --chart-1 in dark mode
+      //main: "hsl(220, 70%, 50%)",
+      main: "hsl(12, 76%, 61%)",
     },
     success: {
-      main: "rgb(34, 197, 94)", // --chart-2 in dark mode
+      main: "rgb(34, 197, 94)",
     },
   },
 };
