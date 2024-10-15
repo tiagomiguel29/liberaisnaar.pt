@@ -93,70 +93,66 @@ export default async function Index({
 
   return (
     <>
-      <main className="flex-1 w-full md:w-3/4 lg:w-2/3 xl:w-2/3 flex flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
-        <div className="mx-auto grid gap-8 md:gap-12">
-          <div>
-            <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between py-6 gap-y-4">
-              <h1 className="text-2xl font-bold">Votações</h1>
-            </div>
-            <VotesFilters />
-            <div className="grid gap-4 md:gap-6 md:grid-cols-1">
-              {votes.map((v) => (
-                <Card key={v.id}>
-                  <CardHeader>
-                    <CardTitle>{v.event.initiative.title}</CardTitle>
-                    <CardDescription>
-                      {v.event.initiative.type_description +
-                        " " +
-                        v.event.initiative.number +
-                        "/" +
-                        v.event.initiative.legislature +
-                        "/" +
-                        v.event.initiative.legislative_session}
-                    </CardDescription>
-                    <CardDescription>
-                      <span className="underline">{v.event.phase}</span>
-                      {v.description && <span> - {v.description}</span>}
-                    </CardDescription>
-                    <CardDescription>
-                      <span className="text-muted-foreground">
-                        {format(new Date(v.event.phase_date), "dd/MM/yyyy")}
-                      </span>
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex flex-col-reverse gap-y-3 md:flex-row md:items-center md:justify-between">
-                    <ILVote vote={v} />
-                    <div className="flex items-center gap-2">
-                      <VoteResultBadge vote={v.result} />
-                    </div>
-                  </CardContent>
-                  <CardFooter className="flex flex-col md:flex-row md:justify-between gap-y-2">
-                    <div className="w-full md:w-auto">
-                      <PartyAuthors initiative={v.event.initiative} />
-                    </div>
-                    <Link
-                      href={`/iniciativas/${v.event.initiative.id}`}
-                      prefetch={false}
-                      className="w-full md:w-auto"
-                    >
-                      <Button fullWidth variant="contained">
-                        Consultar Iniciativa
-                      </Button>
-                    </Link>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-            <div className="p-4 flex justify-center">
-              <Paginator
-                currentPage={page}
-                limit={limit}
-                totalPages={totalPages}
-                href={true}
-                basePath="/votacoes"
-              />
-            </div>
-          </div>
+      <main className="w-full md:w-3/4 lg:w-2/3 xl:w-2/3 px-4 py-8 md:px-8 md:py-12">
+        <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between py-6 gap-y-4">
+          <h1 className="text-2xl font-bold">Votações</h1>
+        </div>
+        <VotesFilters />
+        <div className="grid gap-4 md:gap-6 md:grid-cols-1 w-full">
+          {votes.map((v) => (
+            <Card key={v.id} className="w-full">
+              <CardHeader>
+                <CardTitle>{v.event.initiative.title}</CardTitle>
+                <CardDescription>
+                  {v.event.initiative.type_description +
+                    " " +
+                    v.event.initiative.number +
+                    "/" +
+                    v.event.initiative.legislature +
+                    "/" +
+                    v.event.initiative.legislative_session}
+                </CardDescription>
+                <CardDescription>
+                  <span className="underline">{v.event.phase}</span>
+                  {v.description && <span> - {v.description}</span>}
+                </CardDescription>
+                <CardDescription>
+                  <span className="text-muted-foreground">
+                    {format(new Date(v.event.phase_date), "dd/MM/yyyy")}
+                  </span>
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col-reverse gap-y-3 md:flex-row md:items-center md:justify-between">
+                <ILVote vote={v} />
+                <div className="flex items-center gap-2">
+                  <VoteResultBadge vote={v.result} />
+                </div>
+              </CardContent>
+              <CardFooter className="flex flex-col md:flex-row md:justify-between gap-y-2">
+                <div className="w-full md:w-auto">
+                  <PartyAuthors initiative={v.event.initiative} />
+                </div>
+                <Link
+                  href={`/iniciativas/${v.event.initiative.id}`}
+                  prefetch={false}
+                  className="w-full md:w-auto"
+                >
+                  <Button fullWidth variant="contained">
+                    Consultar Iniciativa
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+        <div className="p-4 flex justify-center">
+          <Paginator
+            currentPage={page}
+            limit={limit}
+            totalPages={totalPages}
+            href={true}
+            basePath="/votacoes"
+          />
         </div>
       </main>
     </>

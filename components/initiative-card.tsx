@@ -27,7 +27,7 @@ export const InitiativeCard = ({
   onFollowClick?: () => void;
 }) => {
   return (
-    <Card key={initiative.id}>
+    <Card key={initiative.id} className="w-full">
       <CardHeader className="pb-2">
         <div className="flex justify-between">
           <CardTitle className="text-lg font-bold">

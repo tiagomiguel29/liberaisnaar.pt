@@ -96,48 +96,44 @@ export default function FollowingInitiativesPage() {
   }
 
   return (
-    <main className="flex-1 w-full md:w-3/4 lg:w-2/3 xl:w-2/3 flex flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
-      <div className="mx-auto grid gap-8 md:gap-12">
-        <div>
-          <div className="my-4">
-            <Link href="/iniciativas">
-              <Button variant="contained" startIcon={<ArrowLeftIcon />}>
-                Voltar
-              </Button>
-            </Link>
+    <main className="w-full md:w-3/4 lg:w-2/3 xl:w-2/3 px-4 py-8 md:px-8 md:py-12">
+      <div className="my-4">
+        <Link href="/iniciativas">
+          <Button variant="contained" startIcon={<ArrowLeftIcon />}>
+            Voltar
+          </Button>
+        </Link>
+      </div>
+      <div className="py-6">
+        <h1 className="text-2xl font-bold">Iniciativas Guardadas</h1>
+      </div>
+      <div className="grid gap-4 md:gap-6 md:grid-cols-1 w-full">
+        {loading && (
+          <div className="flex justify-center items-center p-20">
+            <Spinner />
           </div>
-          <h1 className="text-2xl font-bold mb-4">Iniciativas Guardadas</h1>
-          <div className="grid gap-4 md:gap-6 md:grid-cols-1">
-            {loading && (
-              <div className="flex justify-center items-center p-20">
-                <Spinner />
-              </div>
-            )}
-            {!loading && initiatives.length === 0 && <NoInitiativesFound />}
-            {!loading &&
-              initiatives.map((i) => (
-                <>
-                  <InitiativeCard
-                    key={i.id}
-                    initiative={i}
-                    user={session?.user}
-                    followedInitiatives={i.followed_initiatives}
-                    onFollowClick={() => setFollowClick((prev) => !prev)}
-                  />
-                </>
-              ))}
-          </div>
-          <div className="p-4 flex justify-center">
-            <Paginator
-              currentPage={page}
-              limit={limit}
-              totalPages={totalPages}
-              onPageChange={(page) => {
-                setPage(page);
-              }}
+        )}
+        {!loading && initiatives.length === 0 && <NoInitiativesFound />}
+        {!loading &&
+          initiatives.map((i) => (
+            <InitiativeCard
+              key={i.id}
+              initiative={i}
+              user={session?.user}
+              followedInitiatives={i.followed_initiatives}
+              onFollowClick={() => setFollowClick((prev) => !prev)}
             />
-          </div>
-        </div>
+          ))}
+      </div>
+      <div className="p-4 flex justify-center">
+        <Paginator
+          currentPage={page}
+          limit={limit}
+          totalPages={totalPages}
+          onPageChange={(page) => {
+            setPage(page);
+          }}
+        />
       </div>
     </main>
   );
