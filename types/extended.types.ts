@@ -1,11 +1,11 @@
 import { Tables } from "./database.types";
 
-type Initiative = Tables<"initiatives">;
-type Deputy = Tables<"deputies">;
-type Party = Tables<"parties">;
-type Attachment = Tables<"attachments">;
-type Event = Tables<"events">;
-type Vote = Tables<"votes">;
+export type Initiative = Tables<"initiatives">;
+export type Deputy = Tables<"deputies">;
+export type Party = Tables<"parties">;
+export type Attachment = Tables<"attachments">;
+export type Event = Tables<"events">;
+export type Vote = Tables<"votes">;
 export type Follow = Tables<"followed_initiatives">;
 
 export type VoteWithParties = Vote & {
