@@ -4,6 +4,7 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
+  CardDescription,
 } from "@/components/ui/card";
 
 import { ExtendedInitiative, Follow } from "@/types/extended.types";
@@ -43,6 +44,15 @@ export const InitiativeCard = ({
             </div>
           )}
         </div>
+        <CardDescription>
+          {initiative.type_description +
+            " " +
+            initiative.number +
+            "/" +
+            initiative.legislature +
+            "/" +
+            initiative.legislative_session}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div>
