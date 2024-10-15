@@ -78,12 +78,9 @@ export const InitiativesFilters = () => {
     <div className="space-y-4 py-8">
       <h2 className="text-lg font-semibold">Filtros</h2>
       <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-        <div className="space-y-2">
+        <div className="w-full sm:w-80">
           <FormControl
             fullWidth
-            sx={{
-              width: "300px",
-            }}
           >
             <InputLabel id="type-select">Tipo de Iniciativa</InputLabel>
             <Select
@@ -103,7 +100,7 @@ export const InitiativesFilters = () => {
             </Select>
           </FormControl>
         </div>
-        <div className="space-y-2">
+        <div className="w-full sm:w-80">
           <Popover>
             <PopoverTrigger asChild>
               <TextField
@@ -111,9 +108,7 @@ export const InitiativesFilters = () => {
                 variant="outlined"
                 size="small"
                 label="Data de Submissão"
-                sx={{
-                  width: "300px",
-                }}
+                fullWidth
                 slotProps={{
                   input: {
                     readOnly: true,
