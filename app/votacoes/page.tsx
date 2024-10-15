@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { Metadata } from "next";
 import { Paginator } from "@/components/pagination";
 import { Button } from "@mui/material";
+import { VotesFilters } from "./filters.client";
 
 export const metadata: Metadata = {
   title: "Liberais na AR | Votações",
@@ -25,29 +26,64 @@ export const metadata: Metadata = {
 export default async function Index({
   searchParams,
 }: {
-  searchParams: { page: string | undefined; limit: string | undefined };
+  searchParams: {
+    page: string | undefined;
+    limit: string | undefined;
+    initiativeType: string | undefined;
+    voteType: string | undefined;
+    parties: string | undefined;
+    from: string | undefined;
+    to: string | undefined;
+  };
 }) {
   // Get current page number from query params
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10;
+  const { initiativeType, voteType, parties, from, to } = searchParams;
 
-  const votesRes = await supabase
+  let query = supabase
     .from("votes")
     .select(
       `*,
         inFavor:_InFavorVotes(party:parties(acronym)),
         against:_AgainstVotes(party:parties(acronym)),
         abstained:_AbstainedVotes(party:parties(acronym)),
-        event:events(*, initiative:initiatives(*, party_authors:initiatives_party_authors(party:parties(acronym))))
+        event:events!inner(*, initiative:initiatives!inner(*, party_authors:initiatives_party_authors!inner(party:parties!inner(acronym)))),
+        eventQuery:events!inner(phase, initiative:initiatives!inner(type_description, party_authors:initiatives_party_authors!inner(party:parties!inner(acronym))))
         `,
       { count: "exact" }
     )
     .order("date", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
 
+  if (initiativeType && initiativeType !== "all") {
+    query = query.eq("event.initiative.type_description", initiativeType);
+  }
+
+  if (voteType && voteType !== "all") {
+    query = query.eq("event.phase", voteType);
+  }
+
+  if (parties) {
+    query = query.in(
+      "eventQuery.initiative.party_authors.party.acronym",
+      parties.split(",") ?? []
+    );
+  }
+
+  if (from && to) {
+    query = query.gte("date", from).lte("date", to);
+  } else if (from) {
+    query = query.gte("date", from);
+  } else if (to) {
+    query = query.lte("date", to);
+  }
+
+  const votesRes = await query;
+
   const totalVotes = votesRes.count ?? 0;
   const totalPages = Math.ceil(totalVotes / limit);
-  
+
   if (votesRes.error) {
     console.error(votesRes.error);
     notFound();
@@ -63,9 +99,10 @@ export default async function Index({
             <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between py-6 gap-y-4">
               <h1 className="text-2xl font-bold">Votações</h1>
             </div>
+            <VotesFilters />
             <div className="grid gap-4 md:gap-6 md:grid-cols-1">
               {votes.map((v) => (
-                <Card>
+                <Card key={v.id}>
                   <CardHeader>
                     <CardTitle>{v.event.initiative.title}</CardTitle>
                     <CardDescription>
@@ -102,7 +139,9 @@ export default async function Index({
                       prefetch={false}
                       className="w-full md:w-auto"
                     >
-                      <Button fullWidth variant="contained">Consultar Iniciativa</Button>
+                      <Button fullWidth variant="contained">
+                        Consultar Iniciativa
+                      </Button>
                     </Link>
                   </CardFooter>
                 </Card>
