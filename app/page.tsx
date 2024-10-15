@@ -18,44 +18,49 @@ import {
 } from "@/components/ui/card";
 import { format } from "date-fns";
 
-
 export const revalidate = 120;
 
-const getCachedStats = unstable_cache(async () => {
-  const partyAcronym = "IL";
-  let { data, error } = await supabase
-    .from("party_stats")
-    .select("*")
-    .eq("party_acronym", partyAcronym);
+const getCachedStats = unstable_cache(
+  async () => {
+    const partyAcronym = "IL";
+    let { data, error } = await supabase
+      .from("party_stats")
+      .select("*")
+      .eq("party_acronym", partyAcronym);
 
-  if (error || data?.length === 0) {
-    console.error(error);
-    notFound();
-  }
+    if (error || data?.length === 0) {
+      console.error(error);
+      notFound();
+    }
 
-  return data![0];
-}, ['party_stats'], { revalidate: 120, tags: ['party_stats'] });
+    return data![0];
+  },
+  ["party_stats"],
+  { revalidate: 120, tags: ["party_stats"] }
+);
 
-const getCachedLastInitiatives = unstable_cache(async () => {
-  const partyAcronym = "IL";
-  const res = await supabase
-    .from("initiatives")
-    .select("*, initiatives_party_authors!inner(initiativeId, partyAcronym)")
-    .eq("initiatives_party_authors.partyAcronym", partyAcronym)
-    .order("submission_date", { ascending: false })
-    .limit(5);
+const getCachedLastInitiatives = unstable_cache(
+  async () => {
+    const partyAcronym = "IL";
+    const res = await supabase
+      .from("initiatives")
+      .select("*, initiatives_party_authors!inner(initiativeId, partyAcronym)")
+      .eq("initiatives_party_authors.partyAcronym", partyAcronym)
+      .order("submission_date", { ascending: false })
+      .limit(5);
 
-  if (res.error) {
-    console.error(res.error);
-    notFound();
-  }
+    if (res.error) {
+      console.error(res.error);
+      notFound();
+    }
 
-  return res.data;
-}, ['initiatives'], { revalidate: 120, tags: ['initiatives'] });
+    return res.data;
+  },
+  ["initiatives"],
+  { revalidate: 120, tags: ["initiatives"] }
+);
 
 export default async function Index() {
-  
-
   const stats: PartyStats = await getCachedStats();
 
   const lastInitiatives: Initiative[] = await getCachedLastInitiatives();
@@ -63,16 +68,33 @@ export default async function Index() {
   return (
     <>
       <main className="flex-1 flex flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
-        <div className="container mx-auto grid gap-8 md:gap-12">
+        <div className="mx-auto grid gap-8 md:gap-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-xl font-bold">Taxa de Aprovação</CardTitle>
+                <CardTitle className="text-xl font-bold">
+                  Taxa de Aprovação
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-4xl font-bold">{Math.round((stats.approvedInitiativesCount / stats.votedInitiativesCount) * 100)} %</div>
+                <div className="text-4xl font-bold">
+                  {Math.round(
+                    (stats.approvedInitiativesCount /
+                      stats.votedInitiativesCount) *
+                      100
+                  )}{" "}
+                  %
+                </div>
                 <p className="text-muted-foreground text-sm">
-                  {stats.approvedInitiativesCount + " " + (stats.approvedInitiativesCount !== 1 ? "iniciativas aprovadas" : "iniciativa aprovada")} de {stats.votedInitiativesCount + " " + (stats.votedInitiativesCount !== 1 ? "votadas" : "votada")}
+                  {stats.approvedInitiativesCount +
+                    " " +
+                    (stats.approvedInitiativesCount !== 1
+                      ? "iniciativas aprovadas"
+                      : "iniciativa aprovada")}{" "}
+                  de{" "}
+                  {stats.votedInitiativesCount +
+                    " " +
+                    (stats.votedInitiativesCount !== 1 ? "votadas" : "votada")}
                 </p>
               </CardContent>
             </Card>
@@ -99,7 +121,13 @@ export default async function Index() {
               </CardHeader>
               <CardContent>
                 <div className="text-4xl font-bold">{stats.billsCount}</div>
-                <p className="text-muted-foreground text-sm">{stats.approvedBillsCount + " " + (stats.approvedBillsCount !== 1 ? "Projetos de Lei Aprovados" : "Projeto de Lei Aprovado")}</p>
+                <p className="text-muted-foreground text-sm">
+                  {stats.approvedBillsCount +
+                    " " +
+                    (stats.approvedBillsCount !== 1
+                      ? "Projetos de Lei Aprovados"
+                      : "Projeto de Lei Aprovado")}
+                </p>
               </CardContent>
             </Card>
             <Card>
@@ -112,7 +140,13 @@ export default async function Index() {
                 <div className="text-4xl font-bold">
                   {stats.resolutionsCount}
                 </div>
-                <p className="text-muted-foreground text-sm">{stats.approvedResolutionsCount + " " + (stats.approvedResolutionsCount !== 1 ? "Projetos de Resolução Aprovados" : "Projeto de Resolução Aprovado")}</p>
+                <p className="text-muted-foreground text-sm">
+                  {stats.approvedResolutionsCount +
+                    " " +
+                    (stats.approvedResolutionsCount !== 1
+                      ? "Projetos de Resolução Aprovados"
+                      : "Projeto de Resolução Aprovado")}
+                </p>
               </CardContent>
             </Card>
           </div>
