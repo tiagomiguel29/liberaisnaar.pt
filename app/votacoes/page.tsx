@@ -45,8 +45,9 @@ export default async function Index({
     .order("date", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
 
-  const totalPages = votesRes.count ?? 0;
-
+  const totalVotes = votesRes.count ?? 0;
+  const totalPages = Math.ceil(totalVotes / limit);
+  
   if (votesRes.error) {
     console.error(votesRes.error);
     notFound();
