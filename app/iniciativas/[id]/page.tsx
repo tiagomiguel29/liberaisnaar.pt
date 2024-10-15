@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VoteResultBadge } from "@/components/vote-result-badge";
 import {
+  Attachment,
   EventWithVotes,
   ExtendedInitiative,
   Follow,
@@ -194,6 +195,7 @@ export default async function InitiativeDetailsPage({
             <EventsInitiative events={events} />
           </CardContent>
         </Card>
+        <AttachmentsSection attachments={initiative.attachments} />
       </div>
     </main>
   );
@@ -226,5 +228,30 @@ const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
         ))}
       </div>
     </div>
+  );
+};
+
+const AttachmentsSection = ({ attachments }: { attachments: Attachment[] }) => {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-xl font-bold">Anexos</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {attachments.map((attachment: Attachment) => (
+            <Link key={attachment.id} href={attachment.file} target="_blank">
+              <div
+                key={attachment.id}
+                className="flex flex-col items-center p-4 gap-2 bg-muted/40 shadow-lg rounded-lg hover:shadow-2xl hover:border-primary border-2"
+              >
+                <FileIcon className="h-16 w-16" />
+                <div>{attachment.name}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
