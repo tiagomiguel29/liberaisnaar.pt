@@ -69,7 +69,7 @@ export const InitiativesFilters = () => {
   return (
     <div className="space-y-4 py-8">
       <h2 className="text-lg font-semibold">Filtros</h2>
-      <div className="flex flex-col sm:flex-row sm:items-end gap-4">
+      <div className="flex flex-col sm:flex-row flex-wrap sm:items-end gap-4">
         <div className="w-full sm:w-80">
           <FormControl
             fullWidth
