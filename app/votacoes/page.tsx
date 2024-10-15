@@ -66,31 +66,25 @@ export default async function Index({
               {votes.map((v) => (
                 <Card>
                   <CardHeader>
-                    <div className="flex flex-col md:flex-row md:justify-between">
-                      <div>
-                        <CardTitle className="mb-1">
-                          {v.event.initiative.title}
-                        </CardTitle>
-                        <CardDescription>
-                          {v.event.initiative.type_description +
-                            " " +
-                            v.event.initiative.number +
-                            "/" +
-                            v.event.initiative.legislature +
-                            "/" +
-                            v.event.initiative.legislative_session}
-                        </CardDescription>
-                        <CardDescription>
-                          <span className="underline">{v.event.phase}</span>
-                          {v.description && <span> - {v.description}</span>}
-                        </CardDescription>
-                        <CardDescription>
-                          <span className="text-muted-foreground">
-                            {format(new Date(v.event.phase_date), "dd/MM/yyyy")}
-                          </span>
-                        </CardDescription>
-                      </div>
-                    </div>
+                    <CardTitle>{v.event.initiative.title}</CardTitle>
+                    <CardDescription>
+                      {v.event.initiative.type_description +
+                        " " +
+                        v.event.initiative.number +
+                        "/" +
+                        v.event.initiative.legislature +
+                        "/" +
+                        v.event.initiative.legislative_session}
+                    </CardDescription>
+                    <CardDescription>
+                      <span className="underline">{v.event.phase}</span>
+                      {v.description && <span> - {v.description}</span>}
+                    </CardDescription>
+                    <CardDescription>
+                      <span className="text-muted-foreground">
+                        {format(new Date(v.event.phase_date), "dd/MM/yyyy")}
+                      </span>
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="flex flex-col-reverse gap-y-3 md:flex-row md:items-center md:justify-between">
                     <ILVote vote={v} />
