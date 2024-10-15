@@ -79,7 +79,11 @@ export default function RootLayout({
                   </Link>
                   <nav className="hidden md:flex py-4 items-center gap-6">
                     {navItems.map((item) => (
-                      <NavLink name={item.name} href={item.href} />
+                      <NavLink
+                        key={item.name}
+                        name={item.name}
+                        href={item.href}
+                      />
                     ))}
                     <HeaderAuth />
                   </nav>
@@ -110,7 +114,11 @@ export default function RootLayout({
                       </Link>
                       <div className="grid gap-4 p-6">
                         {navItems.map((item) => (
-                          <MobileNavLink name={item.name} href={item.href} />
+                          <MobileNavLink
+                            key={item.name}
+                            name={item.name}
+                            href={item.href}
+                          />
                         ))}
                         <HeaderAuthMobile />
                       </div>
