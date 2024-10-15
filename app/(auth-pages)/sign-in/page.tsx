@@ -106,7 +106,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
         window.location.href = "/account";
       }
       setLoginLoading(false);
-      
+
     } finally {
       setReadyToShow(true);
     }
@@ -240,7 +240,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
         </Card>
       )}
       {showMFAScreen && readyToShow && (
-        <Card>
+        <Card className="w-full">
           <CardHeader>
             <CardTitle>Autenicação de Dois Fatores</CardTitle>
             <CardDescription>
@@ -248,7 +248,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="min-w-64 flex flex-col gap-2 [&>input]:mb-3">
+            <div className="flex flex-col gap-2 [&>input]:mb-3">
               {MFAError && (
                 <div className="mb-2">
                   <Alert variant="destructive">
