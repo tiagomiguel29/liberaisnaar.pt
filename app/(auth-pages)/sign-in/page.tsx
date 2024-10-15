@@ -2,7 +2,6 @@
 
 import { FormMessage, Message } from "@/components/form-message";
 import { Spinner } from "@/components/spinner";
-import { SubmitButton } from "@/components/submit-button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Card,
@@ -12,14 +11,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 import { errors } from "@/utils/supabase/errors";
 import { Button, TextField } from "@mui/material";
