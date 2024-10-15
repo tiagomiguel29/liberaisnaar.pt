@@ -6,7 +6,6 @@ import {
   Sheet,
   SheetTrigger,
   SheetContent,
-  SheetClose,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { GeistSans } from "geist/font/sans";
@@ -77,7 +76,7 @@ export default function RootLayout({
                       className="py-2"
                     />
                   </Link>
-                  <nav className="hidden md:flex py-4 items-center gap-6">
+                  <nav className="hidden lg:flex py-4 items-center gap-6">
                     {navItems.map((item) => (
                       <NavLink
                         key={item.name}
@@ -92,7 +91,7 @@ export default function RootLayout({
                       <Button
                         variant="secondary"
                         size="icon"
-                        className="md:hidden"
+                        className="lg:hidden"
                       >
                         <MenuIcon className="h-6 w-6" />
                         <span className="sr-only">Toggle navigation menu</span>
