@@ -100,12 +100,13 @@ export default function Login({ searchParams }: { searchParams: Message }) {
 
       setLoginError("");
 
-      setLoginLoading(false);
       if (data.nextLevel === "aal2" && data.nextLevel !== data.currentLevel) {
         setShowMFAScreen(true);
       } else {
         window.location.href = "/account";
       }
+      setLoginLoading(false);
+      
     } finally {
       setReadyToShow(true);
     }
