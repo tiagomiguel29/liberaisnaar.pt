@@ -48,7 +48,7 @@ export default async function Signup({
   }
 
   return (
-    <Card>
+    <Card className="w-full">
       <form className="flex flex-col mx-auto">
         <CardHeader>
           <CardTitle>Sign up</CardTitle>
@@ -63,19 +63,9 @@ export default async function Signup({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex min-w-64 max-w-64 flex-col gap-4 [&>input]:mb-3">
-            <TextField
-              name="name"
-              label="Name"
-              required
-              variant="outlined"
-            />
-            <TextField
-              name="email"
-              label="Email"
-              required
-              variant="outlined"
-            />
+          <div className="flex flex-col gap-4 [&>input]:mb-3">
+            <TextField name="name" label="Name" required variant="outlined" />
+            <TextField name="email" label="Email" required variant="outlined" />
             <TextField
               name="password"
               label="Password"

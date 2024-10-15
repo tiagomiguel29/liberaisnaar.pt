@@ -180,7 +180,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
   return (
     <>
       {!showMFAScreen && (
-        <Card>
+        <Card className="w-full">
           <form
             className="flex-1 flex flex-col min-w-64"
             onSubmit={signInAction}
@@ -198,7 +198,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="min-w-64 flex flex-col gap-4 [&>input]:mb-3">
+              <div className="flex flex-col gap-4 [&>input]:mb-3">
                 {loginError && (
                   <div className="mb-2">
                     <Alert variant="destructive">
@@ -208,20 +208,16 @@ export default function Login({ searchParams }: { searchParams: Message }) {
                     </Alert>
                   </div>
                 )}
-
                 <TextField
                   name="email"
                   label="Email"
-                  placeholder="you@example.com"
                   required
                   variant="outlined"
                 />
-
                 <TextField
                   label="Password"
                   type="password"
                   name="password"
-                  placeholder="password"
                   required
                 />
                 <div className="flex justify-between items-center">
