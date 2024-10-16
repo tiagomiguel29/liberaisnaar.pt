@@ -32,7 +32,7 @@ export function EventsInitiative({ events }: { events: EventWithVotes[] }) {
                   href={attachment.file}
                   target="_blank"
                 >
-                  <div className="flex flex-wrap gap-2 items-start sm:items-center group">
+                  <div className="flex flex-wrap gap-2 items-center group">
                     <div className="flex flex-col items-center p-4 gap-2 bg-muted/40 shadow-lg rounded-lg group-hover:shadow-2xl group-hover:border-primary border-2">
                       <FileIcon className="h-4 w-4" />
                     </div>
