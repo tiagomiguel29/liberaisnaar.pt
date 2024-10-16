@@ -1,6 +1,5 @@
 import { EventsInitiative } from "@/components/events-initiative";
 import { FollowButton } from "@/components/follow-button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VoteResultBadge } from "@/components/vote-result-badge";
 import {
@@ -211,9 +210,7 @@ const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
         <div className="font-bold">Partidos</div>
         <div className="flex flex-wrap gap-1">
           {initiative.party_authors.map(({ party }) => (
-            <Badge className="bg-secondary-foreground" key={party.acronym}>
-              {party.acronym}
-            </Badge>
+            <Chip color="primary" size="small" key={party.acronym} label={party.name} />      
           ))}
         </div>
       </div>
@@ -225,9 +222,7 @@ const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
       <div className="font-bold">Autores</div>
       <div className="flex flex-wrap gap-1">
         {initiative.other_authors?.map((a) => (
-          <Badge className="bg-secondary-foreground" key={a}>
-            {a}
-          </Badge>
+          <Chip color="primary" size="small" key={a} label={a} />        
         ))}
       </div>
     </div>
