@@ -19,7 +19,7 @@ import { notFound } from "next/navigation";
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const { data, error } = await supabase
     .from("initiatives")
-    .select("title")
+    .select("*")
     .eq("id", params.id)
     .single();
 
@@ -31,6 +31,16 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
   return {
     title: data.title,
+    description:
+      data.type_description +
+      " " +
+      data.number +
+      "/" +
+      data.legislature +
+      "/" +
+      data.legislative_session +
+      " - " +
+      data.title,
   };
 }
 
@@ -210,7 +220,12 @@ const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
         <div className="font-bold">Partidos</div>
         <div className="flex flex-wrap gap-1">
           {initiative.party_authors.map(({ party }) => (
-            <Chip color="primary" size="small" key={party.acronym} label={party.name} />      
+            <Chip
+              color="primary"
+              size="small"
+              key={party.acronym}
+              label={party.name}
+            />
           ))}
         </div>
       </div>
@@ -222,7 +237,7 @@ const PartyAuthors = ({ initiative }: { initiative: ExtendedInitiative }) => {
       <div className="font-bold">Autores</div>
       <div className="flex flex-wrap gap-1">
         {initiative.other_authors?.map((a) => (
-          <Chip color="primary" size="small" key={a} label={a} />        
+          <Chip color="primary" size="small" key={a} label={a} />
         ))}
       </div>
     </div>
