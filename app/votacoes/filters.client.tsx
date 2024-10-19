@@ -176,6 +176,16 @@ export const VotesFilters = () => {
     );
   };
 
+  function handleResetFilters() {
+    setInitiativeType("all");
+    setVoteType("all");
+    setParties([]);
+    setDate(undefined);
+    setVoteResult("all");
+    setVotePosition("all");
+    router.push("/votacoes");
+  }
+
   return (
     <div className="space-y-4 py-8">
       <h2 className="text-lg font-semibold">Filtros</h2>
@@ -366,6 +376,13 @@ export const VotesFilters = () => {
           onClick={handleSubmit}
         >
           Aplicar Filtros
+        </Button>
+        <Button
+          variant="outlined"
+          className="w-full sm:w-auto"
+          onClick={handleResetFilters}
+        >
+          Limpar Filtros
         </Button>
       </div>
     </div>

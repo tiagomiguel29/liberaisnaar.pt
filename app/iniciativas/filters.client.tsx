@@ -49,7 +49,6 @@ const voteOptions = [
   { label: "Sem Votação", value: "no-vote" },
 ];
 
-
 export const InitiativesFilters = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -86,14 +85,21 @@ export const InitiativesFilters = () => {
     }
     router.push(`/iniciativas?${st.toString()}`);
   };
+
+  function handleResetFilters() {
+    setType("all");
+    setFirstVote("all");
+    setFinalVote("all");
+    setDate(undefined);
+    router.push("/iniciativas");
+  }
+
   return (
     <div className="space-y-4 py-8">
       <h2 className="text-lg font-semibold">Filtros</h2>
       <div className="flex flex-col sm:flex-row flex-wrap sm:items-end gap-4">
         <div className="w-full sm:w-80">
-          <FormControl
-            fullWidth
-          >
+          <FormControl fullWidth>
             <InputLabel id="type-select">Tipo de Iniciativa</InputLabel>
             <Select
               labelId="type-select"
@@ -155,10 +161,10 @@ export const InitiativesFilters = () => {
           </Popover>
         </div>
         <div className="w-full sm:w-80">
-          <FormControl
-            fullWidth
-          >
-            <InputLabel id="first-vote-select">Votação na Generalidade</InputLabel>
+          <FormControl fullWidth>
+            <InputLabel id="first-vote-select">
+              Votação na Generalidade
+            </InputLabel>
             <Select
               labelId="first-vote-select"
               value={firstVote}
@@ -177,9 +183,7 @@ export const InitiativesFilters = () => {
           </FormControl>
         </div>
         <div className="w-full sm:w-80">
-          <FormControl
-            fullWidth
-          >
+          <FormControl fullWidth>
             <InputLabel id="final-vote-select">Votação Final Global</InputLabel>
             <Select
               labelId="final-vote-select"
@@ -204,6 +208,13 @@ export const InitiativesFilters = () => {
           onClick={handleSubmit}
         >
           Aplicar Filtros
+        </Button>
+        <Button
+          variant="outlined"
+          className="w-full sm:w-auto"
+          onClick={handleResetFilters}
+        >
+          Limpar Filtros
         </Button>
       </div>
     </div>
