@@ -23,7 +23,12 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { CalendarIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+  VoteIcon,
+} from "lucide-react";
 
 const initiativeTypeOtions = [
   { label: "Todos", value: "all" },
@@ -89,11 +94,26 @@ const voteResultOptions = [
   { label: "Rejeitado", value: "Rejeitado" },
 ];
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  
-};
+const votePositionOptions = [
+  { label: "Todos", value: "all" },
+  {
+    label: "A Favor",
+    value: "inFavor",
+    icon: <ThumbsUpIcon className="text-green-500" />,
+  },
+  {
+    label: "Contra",
+    value: "against",
+    icon: <ThumbsDownIcon className="text-red-500" />,
+  },
+  {
+    label: "Abstenção",
+    value: "abstention",
+    icon: <VoteIcon className="text-gray-500" />,
+  },
+];
+
+const MenuProps = {};
 
 export const VotesFilters = () => {
   const router = useRouter();
@@ -116,6 +136,9 @@ export const VotesFilters = () => {
   const [voteResult, setVoteResult] = useState<string>(
     searchParams.get("voteResult") ?? "all"
   );
+  const [votePosition, setVotePosition] = useState<string>(
+    searchParams.get("votePosition") ?? "all"
+  );
 
   const handleSubmit = () => {
     const st = new URLSearchParams();
@@ -137,6 +160,9 @@ export const VotesFilters = () => {
     if (voteResult && voteResult !== "all") {
       st.set("voteResult", voteResult);
     }
+    if (votePosition && votePosition !== "all") {
+      st.set("votePosition", votePosition);
+    }
     router.push(`/votacoes?${st.toString()}`);
   };
 
@@ -156,7 +182,9 @@ export const VotesFilters = () => {
       <div className="flex flex-col sm:flex-row flex-wrap sm:items-end gap-4">
         <div className="w-full sm:w-80">
           <FormControl fullWidth>
-            <InputLabel size="small" id="vote-type-select">Tipo de Votação</InputLabel>
+            <InputLabel size="small" id="vote-type-select">
+              Tipo de Votação
+            </InputLabel>
             <Select
               labelId="vote-type-select"
               value={voteType}
@@ -176,7 +204,9 @@ export const VotesFilters = () => {
         </div>
         <div className="w-full sm:w-80">
           <FormControl fullWidth>
-            <InputLabel size="small" id="type-select">Tipo de Iniciativa</InputLabel>
+            <InputLabel size="small" id="type-select">
+              Tipo de Iniciativa
+            </InputLabel>
             <Select
               labelId="type-select"
               value={initiativeType}
@@ -196,7 +226,9 @@ export const VotesFilters = () => {
         </div>
         <div className="w-full sm:w-80">
           <FormControl fullWidth>
-            <InputLabel size="small" id="party-select-label">Partidos Autores</InputLabel>
+            <InputLabel size="small" id="party-select-label">
+              Partidos Autores
+            </InputLabel>
             <Select
               labelId="party-select-label"
               id="party-select"
@@ -204,15 +236,32 @@ export const VotesFilters = () => {
               size="small"
               value={parties}
               onChange={handlePartiesChange}
-              input={<OutlinedInput id="party-select-input" label="Partidos Autores" size="small"/>}
+              input={
+                <OutlinedInput
+                  id="party-select-input"
+                  label="Partidos Autores"
+                  size="small"
+                />
+              }
               renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: {sm: "nowrap", xs: "wrap"}, gap: 0.5, overflowX: "auto" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexWrap: { sm: "nowrap", xs: "wrap" },
+                    gap: 0.5,
+                    overflowX: "auto",
+                  }}
+                >
                   {selected.map((value) => (
-                    <Chip key={value} label={value} size="small" color="primary" />
+                    <Chip
+                      key={value}
+                      label={value}
+                      size="small"
+                      color="primary"
+                    />
                   ))}
                 </Box>
               )}
-              MenuProps={MenuProps}
             >
               {partyOptions.map((party) => (
                 <MenuItem key={party} value={party}>
@@ -266,7 +315,9 @@ export const VotesFilters = () => {
         </div>
         <div className="w-full sm:w-80">
           <FormControl fullWidth>
-            <InputLabel size="small" id="vote-result-select">Resultado da Votação</InputLabel>
+            <InputLabel size="small" id="vote-result-select">
+              Resultado da Votação
+            </InputLabel>
             <Select
               labelId="vote-result-select"
               value={voteResult}
@@ -279,6 +330,31 @@ export const VotesFilters = () => {
               {voteResultOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+        <div className="w-full sm:w-80">
+          <FormControl fullWidth>
+            <InputLabel size="small" id="vote-position-select">
+              Posição do Voto
+            </InputLabel>
+            <Select
+              labelId="vote-position-select"
+              value={votePosition}
+              label="Posição do Voto"
+              size="small"
+              slotProps={{}}
+              onChange={(e) => setVotePosition(e.target.value)}
+              fullWidth
+            >
+              {votePositionOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  <div className="flex space-x-2">
+                    {option.icon}
+                    <span>{option.label}</span>
+                  </div>
                 </MenuItem>
               ))}
             </Select>

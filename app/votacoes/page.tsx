@@ -18,6 +18,7 @@ import { Metadata } from "next";
 import { Paginator } from "@/components/pagination";
 import { Button } from "@mui/material";
 import { VotesFilters } from "./filters.client";
+import { QueryData } from "@supabase/supabase-js";
 
 export const metadata: Metadata = {
   title: "Liberais na AR | Votações",
@@ -35,25 +36,44 @@ export default async function Index({
     from: string | undefined;
     to: string | undefined;
     voteResult: string | undefined;
+    votePosition: string | undefined;
   };
 }) {
-  // Get current page number from query params
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10;
-  const { initiativeType, voteType, parties, from, to, voteResult } = searchParams;
+  const {
+    initiativeType,
+    voteType,
+    parties,
+    from,
+    to,
+    voteResult,
+    votePosition,
+  } = searchParams;
+
+  let selectQuery = `*,
+  inFavor:_InFavorVotes(party:parties(acronym)),
+  against:_AgainstVotes(party:parties(acronym)),
+  abstained:_AbstainedVotes(party:parties(acronym)),
+  event:events(*, initiative:initiatives(*, party_authors:initiatives_party_authors(party:parties(acronym))))`;
+
+  if (parties) {
+    selectQuery += `, eventQuery:events!inner(phase, initiative:initiatives!inner(type_description, party_authors:initiatives_party_authors!inner(party:parties!inner(acronym))))`;
+  }
+
+  if (votePosition && votePosition !== "all") {
+    if (votePosition === "inFavor") {
+      selectQuery += `, inFavorFilter:_InFavorVotes!inner(party:parties!inner(acronym))`;
+    } else if (votePosition === "against") {
+      selectQuery += `, againstFilter:_AgainstVotes!inner(party:parties!inner(acronym))`;
+    } else if (votePosition === "abstention") {
+      selectQuery += `, abstainedFilter:_AbstainedVotes!inner(party:parties!inner(acronym))`;
+    }
+  }
 
   let query = supabase
     .from("votes")
-    .select(
-      `*,
-        inFavor:_InFavorVotes(party:parties(acronym)),
-        against:_AgainstVotes(party:parties(acronym)),
-        abstained:_AbstainedVotes(party:parties(acronym)),
-        event:events!inner(*, initiative:initiatives!inner(*, party_authors:initiatives_party_authors!inner(party:parties!inner(acronym)))),
-        eventQuery:events!inner(phase, initiative:initiatives!inner(type_description, party_authors:initiatives_party_authors!inner(party:parties!inner(acronym))))
-        `,
-      { count: "exact" }
-    )
+    .select(selectQuery, { count: "exact" })
     .order("date", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
 
@@ -63,6 +83,16 @@ export default async function Index({
 
   if (voteType && voteType !== "all") {
     query = query.eq("event.phase", voteType);
+  }
+
+  if (votePosition && votePosition !== "all") {
+    if (votePosition === "inFavor") {
+      query = query.eq("inFavorFilter.party.acronym", "IL");
+    } else if (votePosition === "against") {
+      query = query.eq("againstFilter.party.acronym", "IL");
+    } else if (votePosition === "abstention") {
+      query = query.eq("abstainedFilter.party.acronym", "IL");
+    }
   }
 
   if (parties) {
@@ -94,7 +124,7 @@ export default async function Index({
     notFound();
   }
 
-  const votes: ExtendedVote[] = votesRes.data;
+  const votes: ExtendedVote[] = votesRes.data as unknown as ExtendedVote[];
 
   return (
     <>
