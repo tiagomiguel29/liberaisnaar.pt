@@ -24,12 +24,14 @@ export default async function Index({
     type: string | undefined;
     from: string | undefined;
     to: string | undefined;
+    firstVote: string | undefined;
+    finalVote: string | undefined;
   };
 }) {
   // Get current page number from query params
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10;
-  const { type, from, to } = searchParams;
+  const { type, from, to, firstVote, finalVote } = searchParams;
 
   const partyAcronym = "IL";
 
@@ -46,20 +48,32 @@ export default async function Index({
     .order("submission_date", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
 
-  // Apply type filter only if type is defined and not "all"
   if (type && type !== "all") {
     query = query.eq("type_description", type);
   }
 
-  // Apply date range filter if both `from` and `to` are defined
   if (from && to) {
     query = query.gte("submission_date", from).lte("submission_date", to);
   } else if (from) {
-    // Apply only from date if defined
     query = query.gte("submission_date", from);
   } else if (to) {
-    // Apply only to date if defined
     query = query.lte("submission_date", to);
+  }
+
+  if (firstVote && firstVote !== "all") {
+    if (firstVote === "no-vote") {
+      query = query.is("firstVoteResult", null);
+    } else {
+      query = query.eq("firstVoteResult", firstVote);
+    }
+  }
+
+  if (finalVote && finalVote !== "all") {
+    if (finalVote === "no-vote") {
+      query = query.is("finalVoteResult", null);
+    } else {
+      query = query.eq("finalVoteResult", finalVote);
+    }
   }
 
   const { data, error, count } = await query;

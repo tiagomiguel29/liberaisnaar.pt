@@ -42,6 +42,14 @@ const typeOtions = [
   { label: "Ratificação", value: "Ratificação" },
 ];
 
+const voteOptions = [
+  { label: "Todos", value: "all" },
+  { label: "Aprovado", value: "Aprovado" },
+  { label: "Rejeitado", value: "Rejeitado" },
+  { label: "Sem Votação", value: "no-vote" },
+];
+
+
 export const InitiativesFilters = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -52,6 +60,12 @@ export const InitiativesFilters = () => {
     to: searchParams.get("to") ? new Date(searchParams.get("to")!) : undefined,
   });
   const [type, setType] = useState<string>(searchParams.get("type") || "all");
+  const [firstVote, setFirstVote] = useState<string>(
+    searchParams.get("firstVote") || "all"
+  );
+  const [finalVote, setFinalVote] = useState<string>(
+    searchParams.get("finalVote") || "all"
+  );
 
   const handleSubmit = () => {
     const st = new URLSearchParams();
@@ -63,6 +77,12 @@ export const InitiativesFilters = () => {
     }
     if (date?.to) {
       st.set("to", format(date.to, "yyyy-MM-dd"));
+    }
+    if (firstVote && firstVote !== "all") {
+      st.set("firstVote", firstVote);
+    }
+    if (finalVote && finalVote !== "all") {
+      st.set("finalVote", finalVote);
     }
     router.push(`/iniciativas?${st.toString()}`);
   };
@@ -133,6 +153,50 @@ export const InitiativesFilters = () => {
               />
             </PopoverContent>
           </Popover>
+        </div>
+        <div className="w-full sm:w-80">
+          <FormControl
+            fullWidth
+          >
+            <InputLabel id="first-vote-select">Votação na Generalidade</InputLabel>
+            <Select
+              labelId="first-vote-select"
+              value={firstVote}
+              label="Voto na Generalidade"
+              size="small"
+              slotProps={{}}
+              onChange={(e) => setFirstVote(e.target.value)}
+              fullWidth
+            >
+              {voteOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+        <div className="w-full sm:w-80">
+          <FormControl
+            fullWidth
+          >
+            <InputLabel id="final-vote-select">Votação Final Global</InputLabel>
+            <Select
+              labelId="final-vote-select"
+              value={finalVote}
+              label="Voto Final Global"
+              size="small"
+              slotProps={{}}
+              onChange={(e) => setFinalVote(e.target.value)}
+              fullWidth
+            >
+              {voteOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
         <Button
           variant="contained"
