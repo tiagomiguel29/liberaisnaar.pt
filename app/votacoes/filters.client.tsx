@@ -83,6 +83,12 @@ const partyOptions = [
   "CH",
 ];
 
+const voteResultOptions = [
+  { label: "Todos", value: "all" },
+  { label: "Aprovado", value: "Aprovado" },
+  { label: "Rejeitado", value: "Rejeitado" },
+];
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -107,6 +113,9 @@ export const VotesFilters = () => {
   const [parties, setParties] = useState<string[]>(
     searchParams.get("parties")?.split(",") ?? []
   );
+  const [voteResult, setVoteResult] = useState<string>(
+    searchParams.get("voteResult") ?? "all"
+  );
 
   const handleSubmit = () => {
     const st = new URLSearchParams();
@@ -124,6 +133,9 @@ export const VotesFilters = () => {
     }
     if (date?.to) {
       st.set("to", format(date.to, "yyyy-MM-dd"));
+    }
+    if (voteResult && voteResult !== "all") {
+      st.set("voteResult", voteResult);
     }
     router.push(`/votacoes?${st.toString()}`);
   };
@@ -251,6 +263,26 @@ export const VotesFilters = () => {
               />
             </PopoverContent>
           </Popover>
+        </div>
+        <div className="w-full sm:w-80">
+          <FormControl fullWidth>
+            <InputLabel size="small" id="vote-result-select">Resultado da Votação</InputLabel>
+            <Select
+              labelId="vote-result-select"
+              value={voteResult}
+              label="Resultado da Votação"
+              size="small"
+              slotProps={{}}
+              onChange={(e) => setVoteResult(e.target.value)}
+              fullWidth
+            >
+              {voteResultOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
         <Button
           variant="contained"

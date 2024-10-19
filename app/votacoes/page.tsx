@@ -34,12 +34,13 @@ export default async function Index({
     parties: string | undefined;
     from: string | undefined;
     to: string | undefined;
+    voteResult: string | undefined;
   };
 }) {
   // Get current page number from query params
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10;
-  const { initiativeType, voteType, parties, from, to } = searchParams;
+  const { initiativeType, voteType, parties, from, to, voteResult } = searchParams;
 
   let query = supabase
     .from("votes")
@@ -69,6 +70,10 @@ export default async function Index({
       "eventQuery.initiative.party_authors.party.acronym",
       parties.split(",") ?? []
     );
+  }
+
+  if (voteResult && voteResult !== "all") {
+    query = query.eq("result", voteResult);
   }
 
   if (from && to) {
