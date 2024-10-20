@@ -252,6 +252,11 @@ const AttachmentsSection = ({ attachments }: { attachments: Attachment[] }) => {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {attachments.length === 0 && (
+            <div className="text-md font-semibold col-span-full">
+              Sem anexos
+            </div>
+          )}
           {attachments.map((attachment: Attachment) => (
             <Link key={attachment.id} href={attachment.file} target="_blank">
               <div
