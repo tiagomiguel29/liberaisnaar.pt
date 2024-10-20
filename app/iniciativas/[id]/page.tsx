@@ -15,6 +15,7 @@ import { format } from "date-fns";
 import { FileIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const { data, error } = await supabase
@@ -44,11 +45,17 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default async function InitiativeDetailsPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export async function generateStaticParams() {
+  const { data, error } = await supabase.from("initiatives").select("id");
+
+  if (error) {
+    return [];
+  }
+
+  return data.map(({ id }) => ({ params: { id } }));
+}
+
+const getInitiative = cache(async (id: string) => {
   const initiativeRes = await supabase
     .from("initiatives")
     .select(
@@ -70,15 +77,25 @@ export default async function InitiativeDetailsPage({
           )
         `
     )
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (initiativeRes.error) {
     console.error(initiativeRes.error);
-    notFound();
+    return null;
   }
 
-  const initiative: ExtendedInitiative = initiativeRes.data;
+  return initiativeRes.data;
+});
+
+export const revalidate = 5 * 60; // 5 minutes
+
+export default async function InitiativeDetailsPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const initiative: ExtendedInitiative = await getInitiative(params.id);
 
   const events: EventWithVotes[] = initiative.events;
 
