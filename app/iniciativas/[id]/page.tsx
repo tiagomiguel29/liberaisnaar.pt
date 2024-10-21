@@ -13,53 +13,39 @@ import { createClient } from "@/utils/supabase/server";
 import { Button, Chip } from "@mui/material";
 import { format } from "date-fns";
 import { FileIcon } from "lucide-react";
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { cache } from "react";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const { data, error } = await supabase
-    .from("initiatives")
-    .select("*")
-    .eq("id", params.id)
-    .single();
+  const initiative: ExtendedInitiative = await getInitiative(params.id);
 
-  if (error) {
+  if (!initiative) {
     return {
-      title: "Liberais Na AR",
-    };
+      title: "Liberais na AR",
+    }
   }
 
   return {
-    title: data.title,
+    title: initiative.title,
     description:
-      data.type_description +
+      initiative.type_description +
       " " +
-      data.number +
+      initiative.number +
       "/" +
-      data.legislature +
+      initiative.legislature +
       "/" +
-      data.legislative_session +
+      initiative.legislative_session +
       " - " +
-      data.title,
+      initiative.title,
   };
 }
 
-export async function generateStaticParams() {
-  const { data, error } = await supabase.from("initiatives").select("id");
-
-  if (error) {
-    return [];
-  }
-
-  return data.map(({ id }) => ({ params: { id } }));
-}
-
-const getInitiative = cache(async (id: string) => {
-  const initiativeRes = await supabase
-    .from("initiatives")
-    .select(
-      `*,
+const getInitiative = unstable_cache(
+  async (id: string) => {
+    const initiativeRes = await supabase
+      .from("initiatives")
+      .select(
+        `*,
         deputy_authors:initiatives_deputy_authors(
             deputy:deputies(record_id, name)
         ),
@@ -76,19 +62,20 @@ const getInitiative = cache(async (id: string) => {
         )
           )
         `
-    )
-    .eq("id", id)
-    .single();
+      )
+      .eq("id", id)
+      .single();
 
-  if (initiativeRes.error) {
-    console.error(initiativeRes.error);
-    return null;
-  }
+    if (initiativeRes.error) {
+      console.error(initiativeRes.error);
+      return null;
+    }
 
-  return initiativeRes.data;
-});
-
-export const revalidate = 5 * 60; // 5 minutes
+    return initiativeRes.data;
+  },
+  ["initiatives"],
+  { revalidate: 3600, tags: ["initiatives"] }
+);
 
 export default async function InitiativeDetailsPage({
   params,
