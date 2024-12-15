@@ -55,7 +55,8 @@ export default async function Index({
   inFavor:_InFavorVotes(party:parties(acronym)),
   against:_AgainstVotes(party:parties(acronym)),
   abstained:_AbstainedVotes(party:parties(acronym)),
-  event:events(*, initiative:initiatives(*, party_authors:initiatives_party_authors(party:parties(acronym))))`;
+  event:events(*, initiative:initiatives(*, party_authors:initiatives_party_authors(party:parties(acronym))))
+  `;
 
   if (parties) {
     selectQuery += `, eventQuery:events!inner(phase, initiative:initiatives!inner(type_description, party_authors:initiatives_party_authors!inner(party:parties!inner(acronym))))`;
@@ -71,6 +72,14 @@ export default async function Index({
     }
   }
 
+  if (initiativeType && initiativeType !== "all") {
+    selectQuery += `, initiativeQueryEvent:events!inner(phase, initiative:initiatives!inner(type_description))`;
+  }
+
+  if (voteType && voteType !== "all") {
+    selectQuery += `, voteQueryEvent:events!inner(phase)`;
+  }
+
   let query = supabase
     .from("votes")
     .select(selectQuery, { count: "exact" })
@@ -78,11 +87,14 @@ export default async function Index({
     .range((page - 1) * limit, page * limit - 1);
 
   if (initiativeType && initiativeType !== "all") {
-    query = query.eq("event.initiative.type_description", initiativeType);
+    query = query.eq(
+      "initiativeQueryEvent.initiative.type_description",
+      initiativeType
+    );
   }
 
   if (voteType && voteType !== "all") {
-    query = query.eq("event.phase", voteType);
+    query = query.eq("voteQueryEvent.phase", voteType);
   }
 
   if (votePosition && votePosition !== "all") {
@@ -125,6 +137,8 @@ export default async function Index({
   }
 
   const votes: ExtendedVote[] = votesRes.data as unknown as ExtendedVote[];
+
+  console.log(votes);
 
   return (
     <>
